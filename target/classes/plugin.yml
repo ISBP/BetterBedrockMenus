@@ -1,5 +1,8 @@
 name: BetterBedrockMenus
-version: '1.0.0'
+version: '1.0.0-ALPHA'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
-prefix: PBSI
+prefix: BetterBedrockMenus
+commands:
+  BetterBedrockMenus:
+    description: Provides basic info about the plugin.
