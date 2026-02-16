@@ -1,0 +1,5 @@
+name: BetterBedrockMenus
+version: '1.0.0'
+main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
+api-version: '1.21'
+prefix: PBSI
