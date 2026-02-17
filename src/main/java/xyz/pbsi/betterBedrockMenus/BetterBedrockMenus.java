@@ -3,6 +3,7 @@ package xyz.pbsi.betterBedrockMenus;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.pbsi.betterBedrockMenus.Commands.Info;
+import xyz.pbsi.betterBedrockMenus.Commands.MenuSender;
 import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
 
 import java.io.File;
@@ -31,6 +32,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
     public void registerCommands()
     {
         this.getCommand("BetterBedrockMenus").setExecutor(new Info());
+        this.getCommand("Send-Menu").setExecutor(new MenuSender());
     }
 
     public void createConfig()

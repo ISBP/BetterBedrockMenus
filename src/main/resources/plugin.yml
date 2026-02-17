@@ -6,3 +6,6 @@ prefix: BetterBedrockMenus
 commands:
   BetterBedrockMenus:
     description: Provides basic info about the plugin.
+  Send-Menu:
+    description: Sends a menu to a specified player
+    usage: /Send-Menu <Player> <Title> <Content>
