@@ -2,8 +2,7 @@ package xyz.pbsi.betterBedrockMenus;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.pbsi.betterBedrockMenus.Commands.Info;
-import xyz.pbsi.betterBedrockMenus.Commands.MenuSender;
+import xyz.pbsi.betterBedrockMenus.Commands.*;
 import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
 
 import java.io.File;
@@ -33,11 +32,15 @@ public final class BetterBedrockMenus extends JavaPlugin {
     {
         this.getCommand("BetterBedrockMenus").setExecutor(new Info());
         this.getCommand("Send-Menu").setExecutor(new MenuSender());
+        this.getCommand("Create-Menu").setExecutor(new MenuCreator());
+        this.getCommand("Delete-Menu").setExecutor(new MenuDeleter());
+        this.getCommand("Send-Premade-Menu").setExecutor(new MenuPremadeSender());
     }
 
     public void createConfig()
     {
         FileConfiguration config = this.getConfig();
+        File menuDirectory = (new File(getDataFolder()+ "/menus") );
         if(!getDataFolder().exists())
         {
             if(!getDataFolder().mkdir())
@@ -57,6 +60,13 @@ public final class BetterBedrockMenus extends JavaPlugin {
 
             }
 
+        }
+        if(!menuDirectory.exists())
+        {
+            if(!menuDirectory.mkdir())
+            {
+                getLogger().warning("Failed to create menu directory!");
+            }
         }
     }
 
