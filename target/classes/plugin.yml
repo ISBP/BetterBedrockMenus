@@ -1,5 +1,5 @@
 name: BetterBedrockMenus
-version: '0.2.1-ALPHA'
+version: '0.2.2-ALPHA'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BetterBedrockMenus
@@ -9,12 +9,16 @@ commands:
   Send-Menu:
     description: Sends a menu to a specified player
     usage: /Send-Menu <Player> <Title> <Content>
+    permission: bbm.send
   Create-Menu:
     description: Creates a menu and stores it within a file.
     usage: /Create-Menu <Menu Name> <Menu Title> <Menu Description>
+    permission: bbm.create
   Delete-Menu:
     description: Deletes a menu
     usage: /Delete-Menu <Menu Name>
+    permission: bbm.delete
   Send-Premade-Menu:
     description: Sends a menu out of the list of pre-made ones
     usage: /send-premade-menu <menu name> <player>
+    permission: bbm.send

@@ -41,11 +41,40 @@ public class MenuPremadeSender implements CommandExecutor {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
                 String title = hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername());
                 String body = hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername());
-                SimpleForm.Builder form = SimpleForm.builder()
-                        .title(title)
-                        .content(body)
-                        .button("Close");
-                targetPlayer.sendForm(form);
+                String action = hashMap.get("Button Action");
+                if(hashMap.get("Button Name") != null)
+                {
+                    SimpleForm.Builder form = SimpleForm.builder()
+                            .title(title)
+                            .content(body)
+                            .button(hashMap.get("Button Name"))
+                            .button("Close")
+                            .validResultHandler(response -> {
+                                if(response.clickedButtonId() == 0)
+                                {
+                                    if(action.charAt(0) == '/')
+                                    {
+                                        targetPlayerJava.performCommand(hashMap.get("Button Action").replace("/", ""));
+                                    }
+                                    else {
+                                        targetPlayerJava.sendMessage(action);
+                                    }
+
+                                }
+                                    }
+
+                            );
+                    targetPlayer.sendForm(form);
+                }
+                else {
+
+
+                    SimpleForm.Builder form = SimpleForm.builder()
+                            .title(title)
+                            .content(body)
+                            .button("Close");
+                    targetPlayer.sendForm(form);
+                }
 
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);

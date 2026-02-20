@@ -12,11 +12,12 @@ public final class BetterBedrockMenus extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Long time = System.currentTimeMillis();
         createConfig();
         registerCommands();
         registerEvents();
         INSTANCE = this;
-        this.getLogger().info("Has successfully initialized!");
+        this.getLogger().info("Has successfully loaded in " + (System.currentTimeMillis() - time) + "ms!");
     }
 
     @Override

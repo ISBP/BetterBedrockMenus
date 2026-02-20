@@ -28,6 +28,7 @@ public class MenuDeleter implements CommandExecutor, TabExecutor {
 
             if(file.exists())
             {
+                //This occurs when a menu was recently sent to a player, and the file is in use.
                 sender.sendMessage("§cThat file is in use! Please wait ~10 seconds before attempting to delete it again!");
             }else {
                 sender.sendMessage("§cThat menu does not exist!");
