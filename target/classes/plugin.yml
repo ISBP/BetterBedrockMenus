@@ -3,6 +3,7 @@ version: '0.2.2-ALPHA'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BetterBedrockMenus
+depend: ["Geyser-Spigot", "floodgate"]
 softdepend: ["PlaceholderAPI"]
 commands:
   BetterBedrockMenus:

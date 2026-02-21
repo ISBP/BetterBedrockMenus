@@ -12,6 +12,7 @@ import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Json;
+import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,11 +38,12 @@ public class MenuPremadeSender implements CommandExecutor {
             sender.sendMessage("§cThat menu does not exist!");
         }
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
+            TextFormatter textFormatter = new TextFormatter();
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
             try {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
-                String title = PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()));
-                String body = PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()));
+                String title = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername())));
+                String body = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername())));
                 String action = hashMap.get("Button Action");
                 BetterBedrockMenus.getInstance().getLogger().info(title + " " + body);
                 if(hashMap.get("Button Name") != null)
@@ -52,17 +54,17 @@ public class MenuPremadeSender implements CommandExecutor {
                             .button(hashMap.get("Button Name"))
                             .button("Close")
                             .validResultHandler(response -> {
-                                if(response.clickedButtonId() == 0)
-                                {
-                                    if(action.charAt(0) == '/')
-                                    {
-                                        targetPlayerJava.performCommand(hashMap.get("Button Action").replace("/", ""));
-                                    }
-                                    else {
-                                        targetPlayerJava.sendMessage(action);
-                                    }
+                                        if(response.clickedButtonId() == 0)
+                                        {
+                                            if(action.charAt(0) == '/')
+                                            {
+                                                targetPlayerJava.performCommand(hashMap.get("Button Action").replace("/", ""));
+                                            }
+                                            else {
+                                                targetPlayerJava.sendMessage(action);
+                                            }
 
-                                }
+                                        }
                                     }
 
                             );
