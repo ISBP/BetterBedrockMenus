@@ -4,14 +4,18 @@ import com.google.gson.JsonObject;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 
 import java.io.*;
+import java.util.List;
 
-public class MenuCreator implements CommandExecutor {
+public class MenuCreator implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         //Data folder where the menus are stored in, located at /plugins/BetterBedrockMenus/menus
@@ -102,5 +106,13 @@ public class MenuCreator implements CommandExecutor {
         sender.sendMessage("§aSuccessfully generated menu!");
 
         return true;
+    }
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if(args.length == 1)
+        {
+            return List.of("FileName");
+        }
+        return List.of("Menu Title ^Menu Body ^Button Name ^Button Action");
     }
 }

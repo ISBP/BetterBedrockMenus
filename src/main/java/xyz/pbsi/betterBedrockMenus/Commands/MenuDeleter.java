@@ -7,9 +7,10 @@ import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuDeleter implements CommandExecutor, TabExecutor {
@@ -22,7 +23,7 @@ public class MenuDeleter implements CommandExecutor, TabExecutor {
             return false;
         }
 
-        File file = new File(folder + "/" + args[0]);
+        File file = new File(folder + "/" + args[0]+".json");
         if(!file.delete())
         {
 
@@ -42,7 +43,12 @@ public class MenuDeleter implements CommandExecutor, TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
-        return Arrays.asList(folder.list());
+        Menus menus = new Menus();
+
+        if(args.length == 1)
+        {
+            return menus.getListOfMenus();
+        }
+        return null;
     }
 }
