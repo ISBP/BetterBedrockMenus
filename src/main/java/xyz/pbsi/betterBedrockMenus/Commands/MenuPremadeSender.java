@@ -5,20 +5,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Json;
+import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class MenuPremadeSender implements CommandExecutor {
+public class MenuPremadeSender implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
@@ -86,5 +91,14 @@ public class MenuPremadeSender implements CommandExecutor {
         }
 
         return true;
+    }
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        Menus menus = new Menus();
+        if(args.length == 1)
+        {
+            return menus.getListOfMenus();
+        }
+        return null;
     }
 }
