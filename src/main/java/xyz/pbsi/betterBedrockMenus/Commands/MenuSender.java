@@ -1,6 +1,6 @@
 package xyz.pbsi.betterBedrockMenus.Commands;
 
-import net.md_5.bungee.api.ChatColor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +10,7 @@ import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.jetbrains.annotations.NotNull;
+import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 public class MenuSender implements CommandExecutor {
     @Override
@@ -30,8 +31,11 @@ public class MenuSender implements CommandExecutor {
                 builder.append(args[i]).append(" ");
             }
             String message = builder.toString();
-            title = ChatColor.translateAlternateColorCodes('&', title);
-            message = ChatColor.translateAlternateColorCodes('&', message);
+            TextFormatter textFormatter = new TextFormatter();
+            title = textFormatter.formatColorCodes(title);
+            message = textFormatter.formatColorCodes(message);
+            title = PlaceholderAPI.setPlaceholders(targetPlayerJava, title);
+            message = PlaceholderAPI.setPlaceholders(targetPlayerJava, message);
             SimpleForm.Builder form = SimpleForm.builder()
                     .title(title)
                     .content(message)

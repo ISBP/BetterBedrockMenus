@@ -9,11 +9,12 @@ import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 public class Info implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        sender.sendMessage("§bBetter Bedrock Menus\n§bCreated by: §3pbsi");
         if(args.length > 0 && args[0].equals("reload"))
         {
             BetterBedrockMenus.getInstance().reloadConfig();
             sender.sendMessage("§aReloaded the config!");
+        }else {
+            sender.sendMessage("§bBetter Bedrock Menus\n§bCreated by: §3pbsi");
         }
         return true;
     }
