@@ -1,8 +1,6 @@
 package xyz.pbsi.betterBedrockMenus.Listeners;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,16 +11,18 @@ import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 public class PlayerJoin implements Listener {
+    TextFormatter textFormatter = new TextFormatter();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         FileConfiguration config = BetterBedrockMenus.getInstance().getConfig();
         //Formats alternate color codes
-        String welcomeTitle = ChatColor.translateAlternateColorCodes('&', config.getString("Welcome Menu Title"));
-        String welcomeText = ChatColor.translateAlternateColorCodes('&', config.getString("Welcome Menu Message"));
+        String welcomeTitle = textFormatter.formatColorCodes(config.getString("Welcome Menu Title"));
+        String welcomeText = textFormatter.formatColorCodes(config.getString("Welcome Menu Message"));
         if(config.getBoolean("Welcome Menu Enabled"))
         {
             SimpleForm.Builder welcomeForm = SimpleForm.builder()

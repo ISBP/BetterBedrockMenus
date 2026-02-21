@@ -3,6 +3,7 @@ version: '0.2.2-ALPHA'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BetterBedrockMenus
+softdepend: ["PlaceholderAPI"]
 commands:
   BetterBedrockMenus:
     description: Provides basic info about the plugin.

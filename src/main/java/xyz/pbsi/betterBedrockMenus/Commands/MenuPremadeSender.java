@@ -1,5 +1,6 @@
 package xyz.pbsi.betterBedrockMenus.Commands;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,9 +40,10 @@ public class MenuPremadeSender implements CommandExecutor {
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
             try {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
-                String title = hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername());
-                String body = hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername());
+                String title = PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()));
+                String body = PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()));
                 String action = hashMap.get("Button Action");
+                BetterBedrockMenus.getInstance().getLogger().info(title + " " + body);
                 if(hashMap.get("Button Name") != null)
                 {
                     SimpleForm.Builder form = SimpleForm.builder()
