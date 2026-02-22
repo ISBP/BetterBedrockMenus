@@ -1,0 +1,119 @@
+package xyz.pbsi.betterBedrockMenus.Listeners;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Utils.Menus;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+public class ChestInteract implements Listener {
+    @EventHandler
+    public void onClick (InventoryClickEvent event)
+    {
+        Player player = (Player) event.getWhoClicked();
+
+        if(player.hasMetadata("opened-menu"))
+        {
+            event.setCancelled(true);
+            ClickType type =  event.getClick();
+            switch(event.getSlot())
+            {
+                case 0:
+                    setupMenu("file-name", player);
+                    break;
+                case 1:
+                    setupMenu("menu-name", player);
+                    break;
+                case 2:
+                    setupMenu("menu-text", player);
+                    break;
+                case 4:
+                    confirm(player);
+                    break;
+                case 5:
+                    reset(player);
+                    player.sendMessage("§cReset your progress!");
+                    break;
+            }
+            if(type.isRightClick() && event.getSlot() == 3)
+            {
+                setupMenu("button-action", player);
+                player.sendMessage("§aStart a message with §f!§a if it's a command!");
+            } else if (event.getSlot()==3) {
+                setupMenu("button-name", player);
+            }
+        }
+    }
+    @EventHandler
+    public void onClose (InventoryCloseEvent event)
+    {
+        Player player = (Player) event.getPlayer();
+        if(player.hasMetadata("opened-menu"))
+        {
+            player.removeMetadata("opened-menu", BetterBedrockMenus.getInstance());
+        }
+    }
+    public void setupMenu(String value, Player player)
+    {
+        player.setMetadata("setting-value", new FixedMetadataValue(BetterBedrockMenus.getInstance(), value));
+        player.sendMessage("§aPlease a value for§f " +value.replace("-", " "));
+        player.closeInventory();
+    }
+    public void confirm(Player player)
+    {
+        if(!(player.hasMetadata("file-name")) || !(player.hasMetadata("menu-name")) || !(player.hasMetadata("menu-text")))
+        {
+            player.sendMessage("§cThe menu was not completed!");
+            player.closeInventory();
+            player.performCommand("menu-ui");
+            return;
+        }
+        List<String> listOfMenus = new Menus().getListOfMenus();
+
+
+        String fileName = player.getMetadata("file-name").getFirst().asString().replace(" ","-");
+        if(listOfMenus.contains(fileName))
+        {
+            player.sendMessage("§cThat menu already exists!");
+            player.closeInventory();
+            player.performCommand("menu-ui");
+            return;
+        }
+        String menuName = player.getMetadata("menu-name").getFirst().asString();
+        String menuText = player.getMetadata("menu-text").getFirst().asString();
+        String buttonName;
+        String buttonAction;
+        try {
+            buttonName = player.getMetadata("button-name").getFirst().asString();
+            buttonAction = player.getMetadata("button-action").getFirst().asString();
+            if(buttonAction.charAt(0) == '!')
+            {
+                StringBuilder buttonActionString = new StringBuilder(buttonAction);
+                buttonActionString.setCharAt(0, '/');
+                buttonAction = buttonActionString.toString();
+            }
+            player.performCommand("create-menu " + fileName + " " + menuName + " ^"+menuText + " ^"+ buttonName + " ^" + buttonAction);
+        } catch (NoSuchElementException e) {
+            player.performCommand("create-menu " + fileName + " " + menuName + " ^"+menuText);
+        }
+        player.sendMessage("§aSuccessfully made menu!");
+        player.closeInventory();
+        reset(player);
+    }
+    public void reset(Player player)
+    {
+        player.removeMetadata("file-name", BetterBedrockMenus.getInstance());
+        player.removeMetadata("menu-name", BetterBedrockMenus.getInstance());
+        player.removeMetadata("menu-text", BetterBedrockMenus.getInstance());
+        player.removeMetadata("button-name", BetterBedrockMenus.getInstance());
+        player.removeMetadata("button-action", BetterBedrockMenus.getInstance());
+        player.removeMetadata("opened-menu", BetterBedrockMenus.getInstance());
+    }
+}

@@ -3,6 +3,8 @@ package xyz.pbsi.betterBedrockMenus;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.pbsi.betterBedrockMenus.Commands.*;
+import xyz.pbsi.betterBedrockMenus.Listeners.ChatListener;
+import xyz.pbsi.betterBedrockMenus.Listeners.ChestInteract;
 import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
 
 import java.io.File;
@@ -12,7 +14,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         createConfig();
         registerCommands();
         registerEvents();
@@ -28,6 +30,8 @@ public final class BetterBedrockMenus extends JavaPlugin {
     public void registerEvents()
     {
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
+        getServer().getPluginManager().registerEvents(new ChestInteract(), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(), this);
     }
     public void registerCommands()
     {
@@ -36,6 +40,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         this.getCommand("Create-Menu").setExecutor(new MenuCreator());
         this.getCommand("Delete-Menu").setExecutor(new MenuDeleter());
         this.getCommand("Send-Premade-Menu").setExecutor(new MenuPremadeSender());
+        this.getCommand("Menu-UI").setExecutor(new MenuUI());
     }
 
     public void createConfig()

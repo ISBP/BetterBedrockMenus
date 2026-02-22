@@ -24,3 +24,7 @@ commands:
     description: Sends a menu out of the list of pre-made ones
     usage: /send-premade-menu <menu name> <player>
     permission: bbm.send
+  Menu-UI:
+    permission: bbm.create
+    description: Chest UI menu for creating bedrock menus
+    usage: /Menu-UI
