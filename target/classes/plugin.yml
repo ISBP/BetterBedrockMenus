@@ -1,5 +1,5 @@
 name: BetterBedrockMenus
-version: '0.2.2-ALPHA'
+version: '0.3.3-ALPHA'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BetterBedrockMenus
@@ -24,3 +24,7 @@ commands:
     description: Sends a menu out of the list of pre-made ones
     usage: /send-premade-menu <menu name> <player>
     permission: bbm.send
+  Menu-UI:
+    permission: bbm.create
+    description: Chest UI menu for creating bedrock menus
+    usage: /Menu-UI

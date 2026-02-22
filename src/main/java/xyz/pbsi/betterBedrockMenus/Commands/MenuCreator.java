@@ -8,7 +8,6 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
-import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 
@@ -102,7 +101,6 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        sender.sendMessage(object.toString());
         sender.sendMessage("§aSuccessfully generated menu!");
 
         return true;
