@@ -50,7 +50,6 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 String title = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername())));
                 String body = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername())));
                 String action = hashMap.get("Button Action");
-                BetterBedrockMenus.getInstance().getLogger().info(title + " " + body);
                 if(hashMap.get("Button Name") != null)
                 {
                     SimpleForm.Builder form = SimpleForm.builder()
