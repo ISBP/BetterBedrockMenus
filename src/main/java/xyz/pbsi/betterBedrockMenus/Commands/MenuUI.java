@@ -22,7 +22,7 @@ public class MenuUI implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(sender instanceof Player player)
         {
-            Inventory inventory = Bukkit.createInventory(player, 9, "§3Menu Manager");
+            Inventory inventory = Bukkit.createInventory(player, 9, "§3§lMenu Creator");
 
             ItemStack nameTag = itemWithLore(player, Material.NAME_TAG, "§f§lFile Name", "§aClick to set!", "file-name");
             ItemStack map = itemWithLore(player, Material.MAP, "§f§lMenu Name", "§aClick to set!", "menu-name");

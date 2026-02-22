@@ -19,7 +19,7 @@ public class ChestInteract implements Listener {
     {
         Player player = (Player) event.getWhoClicked();
 
-        if(player.hasMetadata("opened-menu"))
+        if(player.hasMetadata("opened-menu") && event.getView().getTitle().equals("§3§lMenu Creator"))
         {
             event.setCancelled(true);
             ClickType type =  event.getClick();
@@ -39,6 +39,7 @@ public class ChestInteract implements Listener {
                     break;
                 case 5:
                     reset(player);
+                    player.closeInventory();
                     player.sendMessage("§cReset your progress!");
                     break;
             }
