@@ -24,3 +24,7 @@ To send a saved menu, use `/send-menu <menu name> <player>`.
 You can also send manual menus with the command `/send-command-menu <Player> <Menu Title> <Menu Body>`, though this is not encouraged.
 
 To delete a saved menu use `/delete-menu <menu name.json>`. Please append the name of the menu with .json .
+
+## Permissions:
+The permission "bbm.create" is required to create any menus, so to use the command create-menu or menu-creator.
+To send a menu you must have the permission "bbm.send".
