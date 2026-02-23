@@ -36,6 +36,8 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         StringBuilder bodyBuilder = new StringBuilder();
         StringBuilder buttonAction = new StringBuilder();
         StringBuilder buttonName = new StringBuilder();
+        StringBuilder buttonTwoAction = new StringBuilder();
+        StringBuilder buttonTwoName = new StringBuilder();
         //String buttonName = null;
         for (int i = 1; i < args.length; i++)
         {
@@ -50,31 +52,34 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
                 i++;
             }
             //Will be replaced with a switch eventually ;-;
+            switch (building)
+            {
+                case 0:
+                    titleBuilder.append(args[i]).append(" ");
+                    break;
+                case 1:
+                    bodyBuilder.append(args[i]).append(" ");
+                    break;
+                case 2:
+                    buttonName.append(args[i]).append(" ");
+                    break;
+                case 3:
+                    buttonAction.append(args[i]).append(" ");
+                    break;
+                case 4:
+                    buttonTwoName.append(args[i]).append(" ");
+                    break;
+                case 5:
+                    buttonTwoAction.append(args[i]).append(" ");
+            }
 
-            if(building == 0)
-            {
-                titleBuilder.append(args[i]).append(" ");
-            }
-            if (building == 1)
-            {
-                bodyBuilder.append(args[i]).append(" ");
-            }
-            //Buttons will become a hashmap to allow for greater additions, this is just temporary
-            if(building == 2)
-            {
-                buttonName.append(args[i]).append(" ");
-            }
-            if(building == 3)
-            {
-                buttonAction.append(args[i]).append(" ");
-            }
         }
         if(building == 0)
         {
             sender.sendMessage("§cNo body defined! Start an argument with ^ to start the body string!");
             return true;
         }
-        if(building == 2)
+        if(building == 2 || building == 4)
         {
             sender.sendMessage("§cNo action defined for new button!");
             return true;
@@ -88,12 +93,20 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             buttonAction.deleteCharAt(buttonAction.length() - 1);
 
         }
+        if(!(buttonTwoName.isEmpty()))
+        {
+            buttonTwoName.deleteCharAt(buttonTwoName.length() - 1);
+            buttonTwoAction.deleteCharAt(buttonTwoAction.length() - 1);
+
+        }
 
         JsonObject object = new JsonObject();
         object.addProperty("Title", textFormatter.formatColorCodes(titleBuilder.toString().replace("^", "")));
         object.addProperty("Body", textFormatter.formatColorCodes(bodyBuilder.toString().replace("^", "")));
-        object.addProperty("Button Name", textFormatter.formatColorCodes(buttonName.toString().replace("^","")));
-        object.addProperty("Button Action", textFormatter.formatColorCodes(buttonAction.toString().replace("^", "")));
+        object.addProperty("First Button Name", textFormatter.formatColorCodes(buttonName.toString().replace("^","")));
+        object.addProperty("First Button Action", textFormatter.formatColorCodes(buttonAction.toString().replace("^", "")));
+        object.addProperty("Second Button Name", textFormatter.formatColorCodes(buttonTwoName.toString().replace("^","")));
+        object.addProperty("Second Button Action", textFormatter.formatColorCodes(buttonTwoAction.toString().replace("^", "")));
         try {
             FileWriter file = new FileWriter(folder + "/"+args[0]+".json");
             file.write(object.toString());
@@ -111,6 +124,6 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         {
             return List.of("FileName");
         }
-        return List.of("Menu Title ^Menu Body ^Button Name ^Button Action");
+        return List.of("Menu Title ^Menu Body ^Button Name ^Button Action ^Button Name ^Button Action");
     }
 }

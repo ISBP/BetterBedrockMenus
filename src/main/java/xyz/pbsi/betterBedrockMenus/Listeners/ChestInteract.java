@@ -34,10 +34,10 @@ public class ChestInteract implements Listener {
                 case 2:
                     setupMenu("menu-text", player);
                     break;
-                case 4:
+                case 5:
                     confirm(player);
                     break;
-                case 5:
+                case 6:
                     reset(player);
                     player.closeInventory();
                     player.sendMessage("§cReset your progress!");
@@ -45,10 +45,17 @@ public class ChestInteract implements Listener {
             }
             if(type.isRightClick() && event.getSlot() == 3)
             {
-                setupMenu("button-action", player);
+                setupMenu("first-button-action", player);
                 player.sendMessage("§aStart a message with §f!§a if it's a command!");
             } else if (event.getSlot()==3) {
-                setupMenu("button-name", player);
+                setupMenu("first-button-name", player);
+            }
+            if(type.isRightClick() && event.getSlot() == 4)
+            {
+                setupMenu("second-button-action", player);
+                player.sendMessage("§aStart a message with §f!§a if it's a command!");
+            } else if (event.getSlot()==4) {
+                setupMenu("second-button-name", player);
             }
         }
     }
@@ -91,20 +98,30 @@ public class ChestInteract implements Listener {
         String menuText = player.getMetadata("menu-text").getFirst().asString();
         String buttonName;
         String buttonAction;
+        String buttonSecondName;
+        String buttonSecondAction;
         try {
-            buttonName = player.getMetadata("button-name").getFirst().asString();
-            buttonAction = player.getMetadata("button-action").getFirst().asString();
-            if(buttonAction.charAt(0) == '!')
-            {
-                StringBuilder buttonActionString = new StringBuilder(buttonAction);
-                buttonActionString.setCharAt(0, '/');
-                buttonAction = buttonActionString.toString();
+            if (player.hasMetadata("second-button-name")) {
+                buttonName = player.getMetadata("first-button-name").getFirst().asString();
+                buttonAction = player.getMetadata("first-button-action").getFirst().asString();
+                buttonSecondName = player.getMetadata("second-button-name").getFirst().asString();
+                buttonSecondAction = player.getMetadata("second-button-action").getFirst().asString();
+                buttonSecondAction = formatCommand(buttonSecondAction);
+                buttonAction = formatCommand(buttonAction);
+                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText + " ^" + buttonName + " ^" + buttonAction + " ^" + buttonSecondName + " ^" + buttonSecondAction);
+            } else if (player.hasMetadata("first-button-name")) {
+                buttonName = player.getMetadata("first-button-name").getFirst().asString();
+                buttonAction = player.getMetadata("first-button-action").getFirst().asString();
+                buttonAction = formatCommand(buttonAction);
+                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText + " ^" + buttonName + " ^" + buttonAction);
+            } else {
+                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText);
             }
-            player.performCommand("create-menu " + fileName + " " + menuName + " ^"+menuText + " ^"+ buttonName + " ^" + buttonAction);
-        } catch (NoSuchElementException e) {
-            player.performCommand("create-menu " + fileName + " " + menuName + " ^"+menuText);
+        }catch(NoSuchElementException e)
+        {
+            player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText);
         }
-        player.sendMessage("§aSuccessfully made menu!");
+
         player.closeInventory();
         reset(player);
     }
@@ -113,8 +130,20 @@ public class ChestInteract implements Listener {
         player.removeMetadata("file-name", BetterBedrockMenus.getInstance());
         player.removeMetadata("menu-name", BetterBedrockMenus.getInstance());
         player.removeMetadata("menu-text", BetterBedrockMenus.getInstance());
-        player.removeMetadata("button-name", BetterBedrockMenus.getInstance());
-        player.removeMetadata("button-action", BetterBedrockMenus.getInstance());
+        player.removeMetadata("first-button-name", BetterBedrockMenus.getInstance());
+        player.removeMetadata("first-button-action", BetterBedrockMenus.getInstance());
+        player.removeMetadata("second-button-name", BetterBedrockMenus.getInstance());
+        player.removeMetadata("second-button-action", BetterBedrockMenus.getInstance());
         player.removeMetadata("opened-menu", BetterBedrockMenus.getInstance());
+    }
+
+    public String formatCommand(String input)
+    {
+        if (input.charAt(0) == '!') {
+            StringBuilder inputFormatted = new StringBuilder(input);
+            inputFormatted.setCharAt(0, '/');
+            return inputFormatted.toString();
+        }
+        return input;
     }
 }

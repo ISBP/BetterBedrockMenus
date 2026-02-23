@@ -49,37 +49,70 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
                 String title = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername())));
                 String body = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername())));
-                String action = hashMap.get("Button Action");
-                if(hashMap.get("Button Name") != null)
+                String firstAction = hashMap.get("First Button Action");
+                String secondAction = hashMap.get("Second Button Action");
+                if(hashMap.get("Second Button Name") != null && !(hashMap.get("Second Button Name").isEmpty()))
                 {
-                    SimpleForm.Builder form = SimpleForm.builder()
-                            .title(title)
-                            .content(body)
-                            .button(hashMap.get("Button Name"))
+                    SimpleForm.Builder form = formBuilder(title, body)
+                            .button(hashMap.get("First Button Name"))
+                            .button(hashMap.get("Second Button Name"))
                             .button("Close")
                             .validResultHandler(response -> {
                                         if(response.clickedButtonId() == 0)
                                         {
-                                            if(action.charAt(0) == '/')
+                                            if(firstAction.charAt(0) == '/')
                                             {
-                                                targetPlayerJava.performCommand(hashMap.get("Button Action").replace("/", ""));
+                                                targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") ));
                                             }
                                             else {
-                                                targetPlayerJava.sendMessage(action);
+                                                targetPlayerJava.sendMessage(firstAction);
+                                            }
+
+                                        }
+                                        if(response.clickedButtonId() == 1)
+                                        {
+                                            if(secondAction.charAt(0) == '/')
+                                            {
+                                                targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("Second Button Action").replace("/", "")));
+                                            }
+                                            else {
+                                                targetPlayerJava.sendMessage(secondAction);
                                             }
 
                                         }
                                     }
 
                             );
+
+                    targetPlayer.sendForm(form);
+                }
+                else if(hashMap.get("First Button Name") != null && !(hashMap.get("First Button Name").isEmpty()))
+                {
+                    SimpleForm.Builder form = formBuilder(title, body)
+                            .button(hashMap.get("First Button Name"))
+                            .button("Close")
+                            .validResultHandler(response -> {
+                                        if(response.clickedButtonId() == 0)
+                                        {
+                                            if(firstAction.charAt(0) == '/')
+                                            { PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") );
+                                                 targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") ));
+                                            }
+                                            else {
+                                                targetPlayerJava.sendMessage(firstAction);
+                                            }
+
+                                        }
+                                    }
+
+                            );
+
                     targetPlayer.sendForm(form);
                 }
                 else {
 
 
-                    SimpleForm.Builder form = SimpleForm.builder()
-                            .title(title)
-                            .content(body)
+                    SimpleForm.Builder form = formBuilder(title, body)
                             .button("Close");
                     targetPlayer.sendForm(form);
                 }
@@ -99,5 +132,12 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
             return menus.getListOfMenus();
         }
         return null;
+    }
+
+    public SimpleForm.Builder formBuilder(String title, String body)
+    {
+        return SimpleForm.builder()
+                .title(title)
+                .content(body);
     }
 }
