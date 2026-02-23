@@ -19,7 +19,7 @@ public class ChatListener implements Listener {
             String value = player.getMetadata("setting-value").getFirst().asString();
             player.setMetadata(value, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
             player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
-            player.performCommand("Menu-UI");
+            player.performCommand("menu-creator");
             player.sendMessage("§aSet §f"+value + "§a to §f"+ event.getMessage());
             event.setCancelled(true);
         }
