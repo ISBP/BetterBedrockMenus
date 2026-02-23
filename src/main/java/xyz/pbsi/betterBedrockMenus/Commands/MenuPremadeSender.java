@@ -27,7 +27,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if(args.length != 2)
+            if(args.length != 2)
         {
             return false;
         }
@@ -47,8 +47,8 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
             try {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
-                String title = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername())));
-                String body = textFormatter.formatColorCodes(PlaceholderAPI.setPlaceholders(targetPlayerJava, hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername())));
+                String title = textFormatter.formatColorCodes(formatPlaceholders(hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
+                String body = textFormatter.formatColorCodes(formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
                 String firstAction = hashMap.get("First Button Action");
                 String secondAction = hashMap.get("Second Button Action");
                 if(hashMap.get("Second Button Name") != null && !(hashMap.get("Second Button Name").isEmpty()))
@@ -62,10 +62,11 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         {
                                             if(firstAction.charAt(0) == '/')
                                             {
-                                                targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") ));
+
+                                                targetPlayerJava.performCommand(formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
                                             }
                                             else {
-                                                targetPlayerJava.sendMessage(firstAction);
+                                                targetPlayerJava.sendMessage(formatPlaceholders(firstAction, targetPlayerJava));
                                             }
 
                                         }
@@ -73,7 +74,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         {
                                             if(secondAction.charAt(0) == '/')
                                             {
-                                                targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("Second Button Action").replace("/", "")));
+                                                targetPlayerJava.performCommand(formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
                                             }
                                             else {
                                                 targetPlayerJava.sendMessage(secondAction);
@@ -95,11 +96,11 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         if(response.clickedButtonId() == 0)
                                         {
                                             if(firstAction.charAt(0) == '/')
-                                            { PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") );
-                                                 targetPlayerJava.performCommand(PlaceholderAPI.setPlaceholders(targetPlayerJava,hashMap.get("First Button Action").replace("/", "") ));
+                                            {
+                                                targetPlayerJava.performCommand(formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
                                             }
                                             else {
-                                                targetPlayerJava.sendMessage(firstAction);
+                                                targetPlayerJava.sendMessage(formatPlaceholders(firstAction, targetPlayerJava));
                                             }
 
                                         }
@@ -139,5 +140,13 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         return SimpleForm.builder()
                 .title(title)
                 .content(body);
+    }
+    public String formatPlaceholders(String text, Player player)
+    {
+        if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
+        {
+            return PlaceholderAPI.setPlaceholders(player, text);
+        }
+        return text;
     }
 }

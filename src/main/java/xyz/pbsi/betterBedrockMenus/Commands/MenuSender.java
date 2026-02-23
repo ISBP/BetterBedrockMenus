@@ -1,6 +1,5 @@
 package xyz.pbsi.betterBedrockMenus.Commands;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,8 +33,9 @@ public class MenuSender implements CommandExecutor {
             TextFormatter textFormatter = new TextFormatter();
             title = textFormatter.formatColorCodes(title);
             message = textFormatter.formatColorCodes(message);
-            title = PlaceholderAPI.setPlaceholders(targetPlayerJava, title);
-            message = PlaceholderAPI.setPlaceholders(targetPlayerJava, message);
+            MenuPremadeSender mps = new MenuPremadeSender();
+            title = mps.formatPlaceholders(title, targetPlayerJava);
+            message = mps.formatPlaceholders(message, targetPlayerJava);
             SimpleForm.Builder form = SimpleForm.builder()
                     .title(title)
                     .content(message)

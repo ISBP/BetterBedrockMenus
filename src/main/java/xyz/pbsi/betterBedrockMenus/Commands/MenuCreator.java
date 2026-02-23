@@ -46,12 +46,6 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             {
                 building = building + 1;
             }
-            if(args[i].charAt(0) == '-')
-            {
-                //Will be used for command arguments
-                i++;
-            }
-            //Will be replaced with a switch eventually ;-;
             switch (building)
             {
                 case 0:
