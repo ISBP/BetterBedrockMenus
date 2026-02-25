@@ -46,6 +46,7 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             {
                 building = building + 1;
             }
+            //Determines what one is editing and appends the string to the relevant variable.
             switch (building)
             {
                 case 0:
@@ -68,6 +69,7 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             }
 
         }
+        //Error catching
         if(building == 0)
         {
             sender.sendMessage("§cNo body defined! Start an argument with ^ to start the body string!");
@@ -93,7 +95,7 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             buttonTwoAction.deleteCharAt(buttonTwoAction.length() - 1);
 
         }
-
+        //Adds the JSON objects
         JsonObject object = new JsonObject();
         object.addProperty("Title", textFormatter.formatColorCodes(titleBuilder.toString().replace("^", "")));
         object.addProperty("Body", textFormatter.formatColorCodes(bodyBuilder.toString().replace("^", "")));
@@ -112,6 +114,7 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
 
         return true;
     }
+    //Tab completion, set's the first position to FileName then provides a brief template for the other positions.
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length == 1)

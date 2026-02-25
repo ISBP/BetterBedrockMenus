@@ -33,14 +33,14 @@ public class MenuSender implements CommandExecutor {
             TextFormatter textFormatter = new TextFormatter();
             title = textFormatter.formatColorCodes(title);
             message = textFormatter.formatColorCodes(message);
-            MenuPremadeSender mps = new MenuPremadeSender();
-            title = mps.formatPlaceholders(title, targetPlayerJava);
-            message = mps.formatPlaceholders(message, targetPlayerJava);
+            title = textFormatter.formatPlaceholders(title, targetPlayerJava);
+            message = textFormatter.formatPlaceholders(message, targetPlayerJava);
             SimpleForm.Builder form = SimpleForm.builder()
                     .title(title)
                     .content(message)
                     .button("Close");
             targetPlayer.sendForm(form);
+            sender.sendMessage("§aSuccessfully sent the form!");
         }
 
         else{

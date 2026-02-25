@@ -71,7 +71,7 @@ public class ChestInteract implements Listener {
     public void setupMenu(String value, Player player)
     {
         player.setMetadata("setting-value", new FixedMetadataValue(BetterBedrockMenus.getInstance(), value));
-        player.sendMessage("§aPlease a value for§f " +value.replace("-", " "));
+        player.sendMessage("§aPlease a value for§f " +value.replace("-", " ") + "§a! Type §fCancel§a to cancel.");
         player.closeInventory();
     }
     public void confirm(Player player)

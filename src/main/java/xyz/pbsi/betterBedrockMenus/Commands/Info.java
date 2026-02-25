@@ -7,7 +7,6 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
-import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
 import java.util.List;
 

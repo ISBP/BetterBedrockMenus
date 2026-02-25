@@ -11,7 +11,6 @@ import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
-import xyz.pbsi.betterBedrockMenus.Commands.MenuPremadeSender;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 public class PlayerJoin implements Listener {
@@ -21,10 +20,9 @@ public class PlayerJoin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         FileConfiguration config = BetterBedrockMenus.getInstance().getConfig();
-        MenuPremadeSender mps = new MenuPremadeSender();
         //Formats alternate color codes
-        String welcomeTitle = mps.formatPlaceholders(textFormatter.formatColorCodes(config.getString("Welcome Menu Title")), event.getPlayer());
-        String welcomeText = mps.formatPlaceholders(textFormatter.formatColorCodes(config.getString("Welcome Menu Message")), event.getPlayer());
+        String welcomeTitle = textFormatter.formatPlaceholders(textFormatter.formatColorCodes(config.getString("Welcome Menu Title")), event.getPlayer());
+        String welcomeText = textFormatter.formatPlaceholders(textFormatter.formatColorCodes(config.getString("Welcome Menu Message")), event.getPlayer());
         if(config.getBoolean("Welcome Menu Enabled"))
         {
             SimpleForm.Builder welcomeForm = SimpleForm.builder()

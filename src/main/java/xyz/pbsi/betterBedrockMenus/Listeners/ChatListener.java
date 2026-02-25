@@ -16,11 +16,17 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         if(player.hasMetadata("setting-value"))
         {
+            if(event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
+                event.setCancelled(true);
+                player.sendMessage("&cCanceled operation.");
+            }
             String value = player.getMetadata("setting-value").getFirst().asString();
             player.setMetadata(value, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
             player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
             player.performCommand("menu-creator");
-            player.sendMessage("§aSet §f"+value + "§a to §f"+ event.getMessage());
+            player.sendMessage("§aSet §f"+value.replace("-", " ") + "§a to §f"+ event.getMessage());
             event.setCancelled(true);
         }
     }

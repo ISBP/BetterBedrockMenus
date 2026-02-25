@@ -9,7 +9,6 @@ import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
 import xyz.pbsi.betterBedrockMenus.Utils.Metrics;
 
 import java.io.File;
-
 public final class BetterBedrockMenus extends JavaPlugin {
     private static BetterBedrockMenus INSTANCE;
 
@@ -22,12 +21,12 @@ public final class BetterBedrockMenus extends JavaPlugin {
         registerCommands();
         registerEvents();
         INSTANCE = this;
-        this.getLogger().info("Has successfully loaded in " + (System.currentTimeMillis() - time) + "ms!");
+        this.getLogger().info("Successfully enabled the plugin in " + (System.currentTimeMillis() - time) + "ms!");
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        this.getLogger().info("Successfully disabled the plugin.");
     }
 
     public void registerEvents()

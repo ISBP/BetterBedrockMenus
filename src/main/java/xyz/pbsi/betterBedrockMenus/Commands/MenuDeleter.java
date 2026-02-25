@@ -10,7 +10,6 @@ import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MenuDeleter implements CommandExecutor, TabExecutor {
@@ -30,13 +29,13 @@ public class MenuDeleter implements CommandExecutor, TabExecutor {
             if(file.exists())
             {
                 //This occurs when a menu was recently sent to a player, and the file is in use.
-                sender.sendMessage("§cThat file is in use! Please wait ~10 seconds before attempting to delete it again!");
+                sender.sendMessage("§cThat file is in use! Please wait §f~10 seconds§c before attempting to delete it again!");
             }else {
                 sender.sendMessage("§cThat menu does not exist!");
             }
             return true;
         }
-        sender.sendMessage("§aSuccessfully deleted " + args[0]);
+        sender.sendMessage("§aSuccessfully deleted §f" + args[0] + "§a!");
         return true;
 
     }

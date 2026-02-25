@@ -22,8 +22,9 @@ public class MenuUI implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(sender instanceof Player player)
         {
+            //Creates the inventory
             Inventory inventory = Bukkit.createInventory(player, 9, "§3§lMenu Creator");
-
+            //Calls the item with lore function to generate correct items with the metadata pre-applied.
             ItemStack nameTag = itemWithLore(player, Material.NAME_TAG, "§f§lFile Name", "§aClick to set!", "file-name");
             ItemStack map = itemWithLore(player, Material.MAP, "§f§lMenu Name", "§aClick to set!", "menu-name");
             ItemStack chest = itemWithLore(player, Material.CHEST, "§f§lDescription", "§aClick to set!", "menu-text");
@@ -47,11 +48,13 @@ public class MenuUI implements CommandExecutor {
 //Returns the item with the lore provided and grabs what the current value is from the player's metadata
     public ItemStack itemWithLore(Player player, Material itemType, String name, String loreText, String metaData)
     {
+        //Initializes variables
         ItemStack item = new ItemStack(itemType);
         List<String> lore = new ArrayList<>();
         lore.add(loreText);
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(name);
+        //Checks whether a player has metadata for a specific edit and if so adds it to the lore
         if((!metaData.equals("N/A") && !(metaData.equals("button")) && player.hasMetadata(metaData)))
         {
             String loreState = player.getMetadata(metaData).getFirst().asString();

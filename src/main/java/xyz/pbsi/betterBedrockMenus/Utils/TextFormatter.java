@@ -1,5 +1,9 @@
 package xyz.pbsi.betterBedrockMenus.Utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 public class TextFormatter {
     //This function replaces the & in messages with §, as you can't type a section symbol within Minecraft java
     //It will only replace it if the following character is not a space, so you can use & normally too
@@ -17,5 +21,14 @@ public class TextFormatter {
 
         }
         return newMessage.toString();
+    }
+
+    public String formatPlaceholders(String text, Player player)
+    {
+        if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
+        {
+            return PlaceholderAPI.setPlaceholders(player, text);
+        }
+        return text;
     }
 }
