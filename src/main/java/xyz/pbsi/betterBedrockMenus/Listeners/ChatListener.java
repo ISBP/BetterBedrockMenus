@@ -20,7 +20,7 @@ public class ChatListener implements Listener {
             {
                 player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
                 event.setCancelled(true);
-                player.sendMessage("&cCanceled operation.");
+                player.sendMessage("§cCanceled current operation!");
             }
             String value = player.getMetadata("setting-value").getFirst().asString();
             player.setMetadata(value, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
