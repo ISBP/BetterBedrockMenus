@@ -80,7 +80,7 @@ public class ChestInteract implements Listener {
         {
             player.sendMessage("§cThe menu was not completed!");
             player.closeInventory();
-            player.performCommand("menu-ui");
+            player.performCommand("menu-creator");
             return;
         }
         List<String> listOfMenus = new Menus().getListOfMenus();
@@ -91,7 +91,7 @@ public class ChestInteract implements Listener {
         {
             player.sendMessage("§cThat menu already exists!");
             player.closeInventory();
-            player.performCommand("menu-ui");
+            player.performCommand("menu-creator");
             return;
         }
         String menuName = player.getMetadata("menu-name").getFirst().asString();
