@@ -6,7 +6,7 @@ Better Bedrock Menus is a tool to allow people running a Minecraft server with c
 
 ## Why should I use Better Bedrock Menus?
 Better Bedrock Menus offers a much better experience for bedrock players, especially mobile players as not only to Minecraft Java Chest GUIs get misaligned when sent to Bedrock players, but mobile player's can't even hover over them to see the text, resulting in accidentally mis-clicks!
-Better Bedrock Menus intends to make the experience much easier for Bedrock players by using the built-in menus for their client?
+Better Bedrock Menus intends to make the experience much easier for Bedrock players by using the built-in menus for their client!
 
 ## How do I install Better Bedrock Menus?
 You can download Better Bedrock Menus from the [releases](https://github.com/ISBP/BetterBedrockMenus/releases) tab!
