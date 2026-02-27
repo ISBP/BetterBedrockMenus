@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menus {
-    //Returns a list of the menus by reading the menus directory and replacing the .json in the file names.
+    //Returns a list of the menus by reading the menus directory and removes the .json in the file names.
     public List<String> getListOfMenus()
     {
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");

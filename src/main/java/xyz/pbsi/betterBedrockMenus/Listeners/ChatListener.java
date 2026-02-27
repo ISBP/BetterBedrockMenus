@@ -14,6 +14,7 @@ public class ChatListener implements Listener {
     public void onChat(PlayerChatEvent event)
     {
         Player player = event.getPlayer();
+        String value = player.getMetadata("setting-value").getFirst().asString();
         if(player.hasMetadata("setting-value"))
         {
             if(event.getMessage().equalsIgnoreCase("cancel"))
@@ -21,8 +22,16 @@ public class ChatListener implements Listener {
                 player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
                 event.setCancelled(true);
                 player.sendMessage("§cCanceled current operation!");
+                return;
             }
-            String value = player.getMetadata("setting-value").getFirst().asString();
+            if(event.getMessage().equalsIgnoreCase("reset"))
+            {
+                player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
+                player.removeMetadata(value, BetterBedrockMenus.getInstance());
+                event.setCancelled(true);
+                player.sendMessage("§cRemoved current value!");
+                return;
+            }
             player.setMetadata(value, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
             player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
             player.performCommand("menu-creator");

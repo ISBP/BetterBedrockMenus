@@ -71,18 +71,28 @@ public class ChestInteract implements Listener {
     public void setupMenu(String value, Player player)
     {
         player.setMetadata("setting-value", new FixedMetadataValue(BetterBedrockMenus.getInstance(), value));
-        player.sendMessage("§aPlease a value for§f " +value.replace("-", " ") + "§a! Type §fCancel§a to cancel.");
+        player.sendMessage("§aPlease a value for§f " +value.replace("-", " ") + "§a! Type §fCancel§a to cancel and §fReset§a to reset the current value.");
         player.closeInventory();
+    }
+    public void failure(Player player, String error)
+    {
+        player.sendMessage("§cThe menu was not completed! Reason:§f " + error + "§c!");
+        player.closeInventory();
+        player.performCommand("menu-creator");
     }
     public void confirm(Player player)
     {
         if(!(player.hasMetadata("file-name")) || !(player.hasMetadata("menu-name")) || !(player.hasMetadata("menu-text")))
         {
-            player.sendMessage("§cThe menu was not completed!");
-            player.closeInventory();
-            player.performCommand("menu-creator");
+            failure(player, "Missing a required field (file name, menu name, and/or menu text)");
             return;
         }
+        if((player.hasMetadata("first-button-name")) && !(player.hasMetadata("first-button-action")) || ((player.hasMetadata("second-button-name")) && !(player.hasMetadata("second-button-action"))))
+        {
+            failure(player, "Missing an action for one or more button(s)");
+            return;
+        }
+
         List<String> listOfMenus = new Menus().getListOfMenus();
 
 

@@ -28,8 +28,8 @@ public class MenuUI implements CommandExecutor {
             ItemStack nameTag = itemWithLore(player, Material.NAME_TAG, "§f§lFile Name", "§aClick to set!", "file-name");
             ItemStack map = itemWithLore(player, Material.MAP, "§f§lMenu Name", "§aClick to set!", "menu-name");
             ItemStack chest = itemWithLore(player, Material.CHEST, "§f§lDescription", "§aClick to set!", "menu-text");
-            ItemStack button = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton", "§aLeft click to set name! & §aRight click to set action!", "button-one");
-            ItemStack buttonTwo = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton", "§aLeft click to set name! & §aRight click to set action!", "button-two");
+            ItemStack button = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton One", "§aLeft click to set name! & §aRight click to set action!", "button-one");
+            ItemStack buttonTwo = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton Two", "§aLeft click to set name! & §aRight click to set action!", "button-two");
             ItemStack emeraldBlock = itemWithLore(player, Material.EMERALD_BLOCK, "§a§lConfirm", "§aClick to confirm!", "N/A");
             ItemStack redstoneBlock = itemWithLore(player, Material.REDSTONE_BLOCK, "§c§lReset", "§cClick to reset!", "N/A");
             inventory.setItem(0, nameTag);
@@ -43,7 +43,8 @@ public class MenuUI implements CommandExecutor {
             player.openInventory(inventory);
          return true;
         }
-        return false;
+        sender.sendMessage("This command can only be used as a player!");
+        return true;
     }
 //Returns the item with the lore provided and grabs what the current value is from the player's metadata
     public ItemStack itemWithLore(Player player, Material itemType, String name, String loreText, String metaData)
