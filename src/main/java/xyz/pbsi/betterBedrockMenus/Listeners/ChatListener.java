@@ -14,9 +14,9 @@ public class ChatListener implements Listener {
     public void onChat(PlayerChatEvent event)
     {
         Player player = event.getPlayer();
-        String value = player.getMetadata("setting-value").getFirst().asString();
         if(player.hasMetadata("setting-value"))
         {
+            String value = player.getMetadata("setting-value").getFirst().asString();
             if(event.getMessage().equalsIgnoreCase("cancel"))
             {
                 player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
