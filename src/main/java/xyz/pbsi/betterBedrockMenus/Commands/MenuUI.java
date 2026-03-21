@@ -47,7 +47,7 @@ public class MenuUI implements CommandExecutor {
         return true;
     }
 //Returns the item with the lore provided and grabs what the current value is from the player's metadata
-    public ItemStack itemWithLore(Player player, Material itemType, String name, String loreText, String metaData)
+    private ItemStack itemWithLore(@NotNull Player player, @NotNull Material itemType, @NotNull String name, @NotNull String loreText, @NotNull String metaData)
     {
         //Initializes variables
         ItemStack item = new ItemStack(itemType);
@@ -56,7 +56,7 @@ public class MenuUI implements CommandExecutor {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(name);
         //Checks whether a player has metadata for a specific edit and if so adds it to the lore
-        if((!metaData.equals("N/A") && !(metaData.equals("button")) && player.hasMetadata(metaData)))
+        if(((!metaData.equals("N/A") )&& !(metaData.equals("button")) && player.hasMetadata(metaData)))
         {
             String loreState = player.getMetadata(metaData).getFirst().asString();
             lore.add("§aValue: §f" + loreState);

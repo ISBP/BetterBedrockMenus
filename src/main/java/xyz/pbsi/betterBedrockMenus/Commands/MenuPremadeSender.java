@@ -25,21 +25,34 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-            if(args.length != 2)
+            if(args.length < 2)
         {
             return false;
         }
+        String fileName = args[0];
+        Player preTargetPlayerJava = Bukkit.getPlayerExact(args[1]);
+
+        boolean consoleCommand = false;
         Json json = new Json();
+        if(args[0].charAt(0) == '-' && sender.hasPermission("bbm.console")) {
+            if (args[0].equals("-c")) {
+                consoleCommand = true;
+                fileName = args[1];
+                preTargetPlayerJava = Bukkit.getPlayerExact(args[2]);
+            }
+        }
+
 
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
-        File file = new File(folder + "/" + args[0] + ".json");
-        Player targetPlayerJava = Bukkit.getPlayerExact(args[1]);
+
+        File file = new File(folder + "/" + fileName + ".json");
 
 
         if(!file.exists())
         {
             sender.sendMessage("§cThat menu does not exist!");
         }
+        Player targetPlayerJava = preTargetPlayerJava;
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
             TextFormatter textFormatter = new TextFormatter();
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
@@ -51,6 +64,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 String secondAction = hashMap.get("Second Button Action");
                 if(hashMap.get("Second Button Name") != null && !(hashMap.get("Second Button Name").isEmpty()))
                 {
+                    boolean finalConsoleCommand = consoleCommand;
                     SimpleForm.Builder form = formBuilder(title, body)
                             .button(hashMap.get("First Button Name"))
                             .button(hashMap.get("Second Button Name"))
@@ -60,8 +74,14 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         {
                                             if(firstAction.charAt(0) == '/')
                                             {
-
-                                                targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
+                                                if(finalConsoleCommand)
+                                                {
+                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
+                                                }
+                                                else
+                                                {
+                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
+                                                }
                                             }
                                             else {
                                                 targetPlayerJava.sendMessage(textFormatter.formatPlaceholders(firstAction, targetPlayerJava));
@@ -72,8 +92,14 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         {
                                             if(secondAction.charAt(0) == '/')
                                             {
-                                                targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
-                                            }
+                                                if(finalConsoleCommand)
+                                                {
+                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
+                                                }
+                                                else
+                                                {
+                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
+                                                }                                            }
                                             else {
                                                 targetPlayerJava.sendMessage(secondAction);
                                             }
@@ -87,6 +113,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 }
                 else if(hashMap.get("First Button Name") != null && !(hashMap.get("First Button Name").isEmpty()))
                 {
+                    boolean finalConsoleCommand = consoleCommand;
                     SimpleForm.Builder form = formBuilder(title, body)
                             .button(hashMap.get("First Button Name"))
                             .button("Close")
@@ -95,8 +122,14 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                                         {
                                             if(firstAction.charAt(0) == '/')
                                             {
-                                                targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
-                                            }
+                                                if(finalConsoleCommand)
+                                                {
+                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
+                                                }
+                                                else
+                                                {
+                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
+                                                }                                            }
                                             else {
                                                 targetPlayerJava.sendMessage(textFormatter.formatPlaceholders(firstAction, targetPlayerJava));
                                             }
@@ -126,14 +159,13 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         Menus menus = new Menus();
-        if(args.length == 1)
+        if(args.length == 1 || (args.length == 2 && args[0].equals("-c")))
         {
             return menus.getListOfMenus();
         }
         return null;
     }
-
-    public SimpleForm.Builder formBuilder(String title, String body)
+    private SimpleForm.Builder formBuilder(String title, String body)
     {
         return SimpleForm.builder()
                 .title(title)
