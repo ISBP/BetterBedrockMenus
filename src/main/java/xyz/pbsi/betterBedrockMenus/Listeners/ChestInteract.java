@@ -54,7 +54,7 @@ public class ChestInteract implements Listener {
             {
                 setupMenu("second-button-action", player);
                 player.sendMessage("§aStart a message with §f!§a if it's a command!");
-            } else if (event.getSlot()==4) {
+            } else if (event.getSlot() == 4) {
                 setupMenu("second-button-name", player);
             }
         }
@@ -71,7 +71,7 @@ public class ChestInteract implements Listener {
     private void setupMenu(String value, Player player)
     {
         player.setMetadata("setting-value", new FixedMetadataValue(BetterBedrockMenus.getInstance(), value));
-        player.sendMessage("§aPlease a value for§f " +value.replace("-", " ") + "§a! Type §fCancel§a to cancel and §fReset§a to reset the current value.");
+        player.sendMessage("§aPlease provide a value for§f " +value.replace("-", " ") + "§a! Type §fCancel§a to cancel and §fReset§a to reset the current value.");
         player.closeInventory();
     }
     private void failure(Player player, String error)
