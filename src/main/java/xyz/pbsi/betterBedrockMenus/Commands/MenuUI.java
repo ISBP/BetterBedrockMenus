@@ -10,17 +10,21 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.geysermc.cumulus.form.CustomForm;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class MenuUI implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if(sender instanceof Player player)
+        if(sender instanceof Player player && !(FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())))
         {
             //Creates the inventory
             Inventory inventory = Bukkit.createInventory(player, 9, "§3§lMenu Creator");
@@ -42,6 +46,62 @@ public class MenuUI implements CommandExecutor {
             player.setMetadata("opened-menu", new FixedMetadataValue(BetterBedrockMenus.getInstance(), true));
             player.openInventory(inventory);
          return true;
+        }
+        if(sender instanceof Player javaPlayer && (FloodgateApi.getInstance().isFloodgatePlayer(javaPlayer.getUniqueId())))
+        {
+            FloodgatePlayer player = FloodgateApi.getInstance().getPlayer(javaPlayer.getUniqueId());
+            CustomForm.Builder form = CustomForm.builder()
+                    .title("Menu Creator")
+                    .label(
+                            "§aPlease type out a value for each section of the menu! You can avoid setting the buttons if you don't want to add any by §fleaving them blank§a."
+                    )
+                    .input("§3File Name")
+                    .input("§3Menu Title")
+                    .input("§3Description")
+                    .input("§3First Button Name")
+                    .input("§3First Button Action")
+                    .input("§3Second Button Name")
+                    .input("§3Second Button Action")
+                    .validResultHandler(response -> {
+                        try{
+                            if(response.getInput(7) != null)
+                            {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3) + " ^"
+                                        + response.getInput(4) + " ^"
+                                        + response.getInput(5) + " ^"
+                                        + response.getInput(6) + " ^"
+                                        + response.getInput(7)
+                                );
+                            } else if (response.getInput(6 )!= null) {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3) + " ^"
+                                        + response.getInput(4) + " ^"
+                                        + response.getInput(5)
+
+                                );
+                            } else if (response.getInput(3) != null) {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3)
+                                );
+                            }
+                            else {
+                                javaPlayer.sendMessage("§cOne or more fields lacked a §frequired input§c! If you are setting a button, you §omust§c set both the name and action!");
+
+                            }
+                        }catch(NullPointerException e)
+                        {
+                            javaPlayer.sendMessage("§cOne or more fields lacked a §frequired input§c! If you are setting a button, you §omust§c set both the name and action!");
+                        }
+
+
+                    });
+            player.sendForm(form);
+            return true;
+
         }
         sender.sendMessage("This command can only be used as a player!");
         return true;
