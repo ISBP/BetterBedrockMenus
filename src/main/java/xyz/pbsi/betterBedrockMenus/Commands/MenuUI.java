@@ -10,15 +10,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.geysermc.cumulus.form.SimpleForm;
+import org.geysermc.cumulus.form.CustomForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
-import xyz.pbsi.betterBedrockMenus.Listeners.ChestInteract;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class MenuUI implements CommandExecutor {
@@ -49,40 +49,55 @@ public class MenuUI implements CommandExecutor {
         }
         if(sender instanceof Player javaPlayer && (FloodgateApi.getInstance().isFloodgatePlayer(javaPlayer.getUniqueId())))
         {
-            ChestInteract clickEvent = new ChestInteract();
             FloodgatePlayer player = FloodgateApi.getInstance().getPlayer(javaPlayer.getUniqueId());
-            String fileName = metadataValue("file-name", javaPlayer);
-            String menuName = metadataValue("menu-name", javaPlayer);
-            String menuText = metadataValue("menu-text", javaPlayer);
-            String buttonOneName = metadataValue("first-button-name", javaPlayer);
-            String buttonOneAction = metadataValue("first-button-action", javaPlayer);
-            String buttonTwoName = metadataValue("second-button-name", javaPlayer);
-            String buttonTwoAction = metadataValue("second-button-action", javaPlayer);
-
-
-            SimpleForm.Builder form = SimpleForm.builder()
+            CustomForm.Builder form = CustomForm.builder()
                     .title("Menu Creator")
-                    .content(
-                            "§aFile Name: §f"+fileName + "\n"+
-                                    "§aMenu Title: §f"+menuName + "\n"+
-                                    "§aDescription: §f"+menuText + "\n"+
-                                    "§aFirst Button Name: §f"+buttonOneName + "\n"+
-                                    "§aFirst Button Action: §f"+buttonOneAction + "\n"+
-                                    "§aSecond Button Name: §f"+buttonTwoName + "\n"+
-                                    "§aSecond Button Action: §f"+buttonTwoAction + "\n"
-
+                    .label(
+                            "§aPlease type out a value for each section of the menu! You can avoid setting the buttons if you don't want to add any by §fleaving them blank§a."
                     )
-                    .button("§3File Name")
-                    .button("§3Menu Title")
-                    .button("§3Description")
-                    .button("§3First Button Name")
-                    .button("§3First Button Action")
-                    .button("§3Second Button Name")
-                    .button("§3Second Button Action")
-                    .button("§a§lConfirm")
-                    .button("§c§lReset")
+                    .input("§3File Name")
+                    .input("§3Menu Title")
+                    .input("§3Description")
+                    .input("§3First Button Name")
+                    .input("§3First Button Action")
+                    .input("§3Second Button Name")
+                    .input("§3Second Button Action")
                     .validResultHandler(response -> {
-                        clickEvent.clickHandler(javaPlayer, null, true, response.clickedButtonId());
+                        try{
+                            if(response.getInput(7) != null)
+                            {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3) + " ^"
+                                        + response.getInput(4) + " ^"
+                                        + response.getInput(5) + " ^"
+                                        + response.getInput(6) + " ^"
+                                        + response.getInput(7)
+                                );
+                            } else if (response.getInput(6 )!= null) {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3) + " ^"
+                                        + response.getInput(4) + " ^"
+                                        + response.getInput(5)
+
+                                );
+                            } else if (response.getInput(3) != null) {
+                                javaPlayer.performCommand("create-menu " + Objects.requireNonNull(response.getInput(1)).replace(" ", "-") + " "
+                                        + response.getInput(2) + " ^"
+                                        + response.getInput(3)
+                                );
+                            }
+                            else {
+                                javaPlayer.sendMessage("§cOne or more fields lacked a §frequired input§c! If you are setting a button, you §omust§c set both the name and action!");
+
+                            }
+                        }catch(NullPointerException e)
+                        {
+                            javaPlayer.sendMessage("§cOne or more fields lacked a §frequired input§c! If you are setting a button, you §omust§c set both the name and action!");
+                        }
+
+
                     });
             player.sendForm(form);
             return true;
@@ -90,16 +105,6 @@ public class MenuUI implements CommandExecutor {
         }
         sender.sendMessage("This command can only be used as a player!");
         return true;
-    }
-    private String metadataValue (String metadata, Player player)
-    {
-        if(player.hasMetadata(metadata))
-        {
-            return player.getMetadata(metadata).getFirst().asString();
-        }
-        else {
-            return "§fNone";
-        }
     }
 //Returns the item with the lore provided and grabs what the current value is from the player's metadata
     private ItemStack itemWithLore(@NotNull Player player, @NotNull Material itemType, @NotNull String name, @NotNull String loreText, @NotNull String metaData)

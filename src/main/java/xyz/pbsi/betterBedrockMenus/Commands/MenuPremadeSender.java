@@ -51,6 +51,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         if(!file.exists())
         {
             sender.sendMessage("§cThat menu does not exist!");
+            return true;
         }
         Player targetPlayerJava = preTargetPlayerJava;
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
