@@ -10,6 +10,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,18 +23,29 @@ public class ChestInteract implements Listener {
         if(player.hasMetadata("opened-menu") && event.getView().getTitle().equals("§3§lMenu Creator"))
         {
             event.setCancelled(true);
-            ClickType type =  event.getClick();
-            switch(event.getSlot())
+            clickHandler(player, event, false, event.getSlot());
+        }
+    }
+
+    public void clickHandler(Player player, @Nullable InventoryClickEvent event, Boolean bedrock, int slot)
+    {
+        switch(slot)
+        {
+            case 0:
+                setupMenu("file-name", player);
+                break;
+            case 1:
+                setupMenu("menu-name", player);
+                break;
+            case 2:
+                setupMenu("menu-text", player);
+                break;
+
+        }
+        if(!bedrock)
+        {
+            switch (slot)
             {
-                case 0:
-                    setupMenu("file-name", player);
-                    break;
-                case 1:
-                    setupMenu("menu-name", player);
-                    break;
-                case 2:
-                    setupMenu("menu-text", player);
-                    break;
                 case 5:
                     confirm(player);
                     break;
@@ -43,6 +55,8 @@ public class ChestInteract implements Listener {
                     player.sendMessage("§cReset your progress!");
                     break;
             }
+            assert event != null;
+            ClickType type =  event.getClick();
             if(type.isRightClick() && event.getSlot() == 3)
             {
                 setupMenu("first-button-action", player);
@@ -58,6 +72,36 @@ public class ChestInteract implements Listener {
                 setupMenu("second-button-name", player);
             }
         }
+        else{
+            switch (slot)
+            {
+                case 3:
+                    setupMenu("first-button-name", player);
+                    break;
+                case 4:
+                    setupMenu("first-button-action", player);
+                    player.sendMessage("§aStart a message with §f!§a if it's a command!");
+                    break;
+                case 5:
+                    setupMenu("second-button-name", player);
+                    break;
+                case 6:
+                    setupMenu("second-button-action", player);
+                    player.sendMessage("§aStart a message with §f!§a if it's a command!");
+                    break;
+                case 7:
+                    confirm(player);
+                    break;
+                case 8:
+                    player.closeInventory();
+                    player.sendMessage("§cReset your progress!");
+                    break;
+
+            }
+        }
+
+
+
     }
     @EventHandler
     public void onClose (InventoryCloseEvent event)
