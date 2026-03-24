@@ -12,6 +12,7 @@ import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 
 public class MenuCreator implements CommandExecutor, TabCompleter {
@@ -34,10 +35,10 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         int building = 0;
         StringBuilder titleBuilder = new StringBuilder();
         StringBuilder bodyBuilder = new StringBuilder();
-        StringBuilder buttonAction = new StringBuilder();
-        StringBuilder buttonName = new StringBuilder();
-        StringBuilder buttonTwoAction = new StringBuilder();
-        StringBuilder buttonTwoName = new StringBuilder();
+        JsonObject object = new JsonObject();
+
+        HashMap<String, String> buttonBuilderHashMap = new HashMap<String, String>();
+        int amountOfButtons = 0;
         //String buttonName = null;
         for (int i = 1; i < args.length; i++)
         {
@@ -55,54 +56,71 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
                 case 1:
                     bodyBuilder.append(args[i]).append(" ");
                     break;
-                case 2:
-                    buttonName.append(args[i]).append(" ");
-                    break;
-                case 3:
-                    buttonAction.append(args[i]).append(" ");
-                    break;
-                case 4:
-                    buttonTwoName.append(args[i]).append(" ");
-                    break;
-                case 5:
-                    buttonTwoAction.append(args[i]).append(" ");
+            }
+            if(building > 1)
+            {
+
+                if(building % 2 == 0)
+                {
+                    if(buttonBuilderHashMap.containsKey("button-"+amountOfButtons) && !args[i].contains("^"))
+                    {
+                        buttonBuilderHashMap.put("button-"+amountOfButtons, buttonBuilderHashMap.get("button-"+amountOfButtons) + args[i] + " ");
+                    }else{
+                        amountOfButtons = amountOfButtons + 1;
+                        buttonBuilderHashMap.put("button-" + amountOfButtons, args[i] + " ");
+                    }
+                }
+                else {
+                    if(buttonBuilderHashMap.containsKey("button-action-"+amountOfButtons))
+                    {
+                        buttonBuilderHashMap.put("button-action-"+amountOfButtons, buttonBuilderHashMap.get("button-action-"+amountOfButtons) + args[i] + " ");
+                    }
+                    else {
+                        buttonBuilderHashMap.put("button-action-" + amountOfButtons, args[i] + " ");
+                    }
+                }
             }
 
         }
+        //Removes the trailing space
+        titleBuilder.deleteCharAt(titleBuilder.length() - 1);
+        bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
+        object.addProperty("Title", textFormatter.formatColorCodes(titleBuilder.toString().replace("^", "")));
+        object.addProperty("Body", textFormatter.formatColorCodes(bodyBuilder.toString().replace("^", "")));
+        object.addProperty("Buttons Amount", String.valueOf(amountOfButtons));
+
         //Error catching
         if(building == 0)
         {
             sender.sendMessage("§cNo body defined! Start an argument with ^ to start the body string!");
             return true;
         }
-        if(building == 2 || building == 4)
+        if(building > 1 && building % 2 == 0)
         {
             sender.sendMessage("§cNo action defined for new button!");
             return true;
         }
-        //Removes the trailing space
-        titleBuilder.deleteCharAt(titleBuilder.length() - 1);
-        bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
-        if(!(buttonName.isEmpty()))
-        {
-            buttonName.deleteCharAt(buttonName.length() - 1);
-            buttonAction.deleteCharAt(buttonAction.length() - 1);
+
+        for (int i = 1; i <= amountOfButtons; i++) {
+            StringBuilder buttonName = new StringBuilder(buttonBuilderHashMap.get("button-"+i));
+            StringBuilder buttonAction = new StringBuilder(buttonBuilderHashMap.get("button-action-"+i));
+            if(!(buttonName.isEmpty()) && !(buttonAction.isEmpty()))
+            {
+                buttonName.deleteCharAt(buttonName.length() - 1);
+                buttonAction.deleteCharAt(buttonAction.length() - 1);
+            }
+            else
+            {
+                sender.sendMessage("ok so smth broke ngl");
+                return true;
+            }
+            object.addProperty("button-" + i, buttonName.toString().replace("^", ""));
+            object.addProperty("button-action-" + i, buttonAction.toString().replace("^", ""));
 
         }
-        if(!(buttonTwoName.isEmpty()))
-        {
-            buttonTwoName.deleteCharAt(buttonTwoName.length() - 1);
-            buttonTwoAction.deleteCharAt(buttonTwoAction.length() - 1);
 
-        }
         //Adds the JSON objects
-        JsonObject object = new JsonObject();
-        object.addProperty("Title", textFormatter.formatColorCodes(titleBuilder.toString().replace("^", "")));
-        object.addProperty("Body", textFormatter.formatColorCodes(bodyBuilder.toString().replace("^", "")));
-        object.addProperty("First Button Name", textFormatter.formatColorCodes(buttonName.toString().replace("^","")));
-        object.addProperty("First Button Action", textFormatter.formatColorCodes(buttonAction.toString().replace("^", "")));
-        object.addProperty("Second Button Name", textFormatter.formatColorCodes(buttonTwoName.toString().replace("^","")));
-        object.addProperty("Second Button Action", textFormatter.formatColorCodes(buttonTwoAction.toString().replace("^", "")));
+
         try {
             FileWriter file = new FileWriter(folder + "/"+args[0]+".json");
             file.write(object.toString());

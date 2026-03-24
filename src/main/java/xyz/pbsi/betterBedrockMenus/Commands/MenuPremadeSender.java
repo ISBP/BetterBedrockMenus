@@ -1,5 +1,6 @@
 package xyz.pbsi.betterBedrockMenus.Commands;
 
+import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,6 +19,8 @@ import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,21 +28,25 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-            if(args.length < 2)
+        if(args.length < 2)
         {
             return false;
         }
         String fileName = args[0];
         Player preTargetPlayerJava = Bukkit.getPlayerExact(args[1]);
 
-        boolean consoleCommand = false;
+        boolean consoleCommand;
         Json json = new Json();
         if(args[0].charAt(0) == '-' && sender.hasPermission("bbm.console")) {
             if (args[0].equals("-c")) {
                 consoleCommand = true;
                 fileName = args[1];
                 preTargetPlayerJava = Bukkit.getPlayerExact(args[2]);
+            } else {
+                consoleCommand = false;
             }
+        } else {
+            consoleCommand = false;
         }
 
 
@@ -53,6 +60,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
             sender.sendMessage("§cThat menu does not exist!");
             return true;
         }
+
         Player targetPlayerJava = preTargetPlayerJava;
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
             TextFormatter textFormatter = new TextFormatter();
@@ -61,98 +69,58 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
                 String title = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
                 String body = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
-                String firstAction = hashMap.get("First Button Action");
-                String secondAction = hashMap.get("Second Button Action");
-                if(hashMap.get("Second Button Name") != null && !(hashMap.get("Second Button Name").isEmpty()))
+                if(hashMap.containsKey("First Button Action") && !(hashMap.containsKey("button-1")))
                 {
-                    boolean finalConsoleCommand = consoleCommand;
-                    SimpleForm.Builder form = formBuilder(title, body)
-                            .button(hashMap.get("First Button Name"))
-                            .button(hashMap.get("Second Button Name"))
-                            .button("Close")
-                            .validResultHandler(response -> {
-                                        if(response.clickedButtonId() == 0)
-                                        {
-                                            if(firstAction.charAt(0) == '/')
-                                            {
-                                                if(finalConsoleCommand)
-                                                {
-                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
-                                                }
-                                                else
-                                                {
-                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
-                                                }
-                                            }
-                                            else {
-                                                targetPlayerJava.sendMessage(textFormatter.formatPlaceholders(firstAction, targetPlayerJava));
-                                            }
 
-                                        }
-                                        if(response.clickedButtonId() == 1)
-                                        {
-                                            if(secondAction.charAt(0) == '/')
-                                            {
-                                                if(finalConsoleCommand)
-                                                {
-                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
-                                                }
-                                                else
-                                                {
-                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("Second Button Action").replace("/", ""), targetPlayerJava));
-                                                }                                            }
-                                            else {
-                                                targetPlayerJava.sendMessage(secondAction);
-                                            }
+                    JsonObject object = new JsonObject();
+                    object.addProperty("Menu Name", hashMap.get("Menu Name"));
+                    object.addProperty("Menu Body", hashMap.get("Menu Body"));
+                    object.addProperty("button-1", hashMap.get("First Button Name"));
+                    object.addProperty("button-action-1", hashMap.get("First Button Action"));
+                    if(hashMap.containsKey("Second Button Action"))
+                    {
+                        object.addProperty("button-2", hashMap.get("Second Button Name"));
+                        object.addProperty("button-action-2", hashMap.get("Second Button Action"));
+                        object.addProperty("Buttons Amount", "2");
+                    }else {
+                        object.addProperty("Buttons Amount", "1");
+                    }
 
-                                        }
-                                    }
-
-                            );
-
-                    targetPlayer.sendForm(form);
-                }
-                else if(hashMap.get("First Button Name") != null && !(hashMap.get("First Button Name").isEmpty()))
+                    if(hashMap.containsKey("Second Button Action"))
+                    {
+                        object.addProperty("button-2", hashMap.get("Second Button Name"));
+                        object.addProperty("button-action-2", hashMap.get("Second Button Action"));
+                    }
+                if(file.delete())
                 {
-                    boolean finalConsoleCommand = consoleCommand;
-                    SimpleForm.Builder form = formBuilder(title, body)
-                            .button(hashMap.get("First Button Name"))
-                            .button("Close")
-                            .validResultHandler(response -> {
-                                        if(response.clickedButtonId() == 0)
-                                        {
-                                            if(firstAction.charAt(0) == '/')
-                                            {
-                                                if(finalConsoleCommand)
-                                                {
-                                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
-                                                }
-                                                else
-                                                {
-                                                    targetPlayerJava.performCommand(textFormatter.formatPlaceholders(hashMap.get("First Button Action").replace("/", ""), targetPlayerJava));
-                                                }                                            }
-                                            else {
-                                                targetPlayerJava.sendMessage(textFormatter.formatPlaceholders(firstAction, targetPlayerJava));
-                                            }
+                    try {
 
-                                        }
-                                    }
-
-                            );
-
-                    targetPlayer.sendForm(form);
-                }
-                else {
-
-
-                    SimpleForm.Builder form = formBuilder(title, body)
-                            .button("Close");
-                    targetPlayer.sendForm(form);
+                        FileWriter fileWriter = new FileWriter(folder + "/"+args[0]+".json");
+                        fileWriter.write(object.toString());
+                        fileWriter.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
+                }
+                int buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
+                SimpleForm.Builder modalForm = formBuilder(title,body);
+                for (int i = 1; i <= buttons; i++) {
+                    modalForm = modalForm.button(hashMap.get("button-"+ i));
+                }
+                modalForm.validResultHandler(result -> {
+                    try {
+                        resultHandler(result.clickedButtonId(), file, targetPlayerJava, consoleCommand);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                targetPlayer.sendForm(modalForm);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
+
         }
 
         return true;
@@ -165,6 +133,26 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
             return menus.getListOfMenus();
         }
         return null;
+    }
+    private void resultHandler(int button, File menu, Player player, boolean console) throws FileNotFoundException
+    {
+        Json json = new Json();
+        button = button + 1;
+        HashMap<String, String> menuReader =  json.jsonToHashMap(menu);
+        TextFormatter textFormatter = new TextFormatter();
+        String action = menuReader.get("button-action-"+button);
+        if(action.charAt(0) == '/')
+        {
+            if(console)
+            {
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(action, player).replace("/", ""));
+            }else {
+                player.performCommand(textFormatter.formatColorCodes(textFormatter.formatPlaceholders(action, player)).replace("/", ""));
+            }
+        }
+        else {
+            player.sendMessage(textFormatter.formatPlaceholders(textFormatter.formatColorCodes(action),player));
+        }
     }
     private SimpleForm.Builder formBuilder(String title, String body)
     {
