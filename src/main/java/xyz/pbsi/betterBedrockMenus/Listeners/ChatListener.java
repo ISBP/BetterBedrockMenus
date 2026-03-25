@@ -6,8 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
-//Despite being deprecated the methods used are fine and work the best out of all the option soooo o.o
-//Yay I love coding at 1
+//Deprecation error occurs just because I'm using paper and it hates me
 @SuppressWarnings("deprecation")
 public class ChatListener implements Listener {
     @EventHandler
@@ -28,8 +27,41 @@ public class ChatListener implements Listener {
             {
                 player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
                 player.removeMetadata(value, BetterBedrockMenus.getInstance());
+                if(player.hasMetadata("setting-button"))
+                {
+                    int button = player.getMetadata("setting-button").getFirst().asInt();
+                    String type = player.getMetadata("setting-type").getFirst().asString();
+                    if(type.equals("button-action"))
+                    {
+                        player.removeMetadata("button-action-"+button, BetterBedrockMenus.getInstance());
+                    }else {
+                        player.removeMetadata("button-"+button, BetterBedrockMenus.getInstance());
+                    }
+                    player.removeMetadata("setting-button", BetterBedrockMenus.getInstance());
+                    player.removeMetadata("setting-type", BetterBedrockMenus.getInstance());
+                }
                 event.setCancelled(true);
                 player.sendMessage("§cRemoved current value!");
+                return;
+            }
+            if(player.hasMetadata("setting-button"))
+            {
+                int button = player.getMetadata("setting-button").getFirst().asInt();
+                String type = player.getMetadata("setting-type").getFirst().asString();
+                if(type.equals("button-action"))
+                {
+                    player.setMetadata("button-action-"+button, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
+                    player.sendMessage("§aSet §f"+value.replace("-", " ") + " action §ato §f"+ event.getMessage());
+
+                }
+                else {
+                    player.setMetadata("button-"+button, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));
+                    player.sendMessage("§aSet §f"+value.replace("-", " ") + " name §ato §f"+ event.getMessage());
+                }
+                event.setCancelled(true);
+                player.removeMetadata("setting-button", BetterBedrockMenus.getInstance());
+                player.removeMetadata("setting-value", BetterBedrockMenus.getInstance());
+                player.performCommand("menu-creator");
                 return;
             }
             player.setMetadata(value, new FixedMetadataValue(BetterBedrockMenus.getInstance(), event.getMessage()));

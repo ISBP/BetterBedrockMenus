@@ -32,8 +32,10 @@ public class MenuUI implements CommandExecutor {
             ItemStack nameTag = itemWithLore(player, Material.NAME_TAG, "§f§lFile Name", "§aClick to set!", "file-name");
             ItemStack map = itemWithLore(player, Material.MAP, "§f§lMenu Name", "§aClick to set!", "menu-name");
             ItemStack chest = itemWithLore(player, Material.CHEST, "§f§lDescription", "§aClick to set!", "menu-text");
-            ItemStack button = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton One", "§aLeft click to set name! & §aRight click to set action!", "button-one");
-            ItemStack buttonTwo = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton Two", "§aLeft click to set name! & §aRight click to set action!", "button-two");
+            ItemStack button = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton One", "§aLeft click to set name! & §aRight click to set action!", "button-1");
+            ItemStack buttonTwo = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton Two", "§aLeft click to set name! & §aRight click to set action!", "button-2");
+            ItemStack buttonThree = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton Three", "§aLeft click to set name! & §aRight click to set action!", "button-3");
+            ItemStack buttonFour = itemWithLore(player, Material.OAK_BUTTON, "§f§lButton Four", "§aLeft click to set name! & §aRight click to set action!", "button-4");
             ItemStack emeraldBlock = itemWithLore(player, Material.EMERALD_BLOCK, "§a§lConfirm", "§aClick to confirm!", "N/A");
             ItemStack redstoneBlock = itemWithLore(player, Material.REDSTONE_BLOCK, "§c§lReset", "§cClick to reset!", "N/A");
             inventory.setItem(0, nameTag);
@@ -41,8 +43,10 @@ public class MenuUI implements CommandExecutor {
             inventory.setItem(2, chest);
             inventory.setItem(3, button);
             inventory.setItem(4, buttonTwo);
-            inventory.setItem(5, emeraldBlock);
-            inventory.setItem(6, redstoneBlock);
+            inventory.setItem(5, buttonThree);
+            inventory.setItem(6, buttonFour);
+            inventory.setItem(7, emeraldBlock);
+            inventory.setItem(8, redstoneBlock);
             player.setMetadata("opened-menu", new FixedMetadataValue(BetterBedrockMenus.getInstance(), true));
             player.openInventory(inventory);
          return true;
@@ -116,30 +120,18 @@ public class MenuUI implements CommandExecutor {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(name);
         //Checks whether a player has metadata for a specific edit and if so adds it to the lore
-        if(((!metaData.equals("N/A") )&& !(metaData.equals("button")) && player.hasMetadata(metaData)))
+        if(((!metaData.equals("N/A") )&& !(metaData.contains("button")) && player.hasMetadata(metaData)))
         {
             String loreState = player.getMetadata(metaData).getFirst().asString();
             lore.add("§aValue: §f" + loreState);
-        } else if (metaData.equals("button-one")) {
-            if(player.hasMetadata("first-button-name"))
+        } else if (metaData.contains("button")) {
+            if(player.hasMetadata(metaData))
             {
-                lore.add("§aButton Name: §f" + player.getMetadata("first-button-name").getFirst().asString());
+                lore.add("§aButton Name: §f" + player.getMetadata(metaData).getFirst().asString());
             }
-            if(player.hasMetadata("first-button-action"))
+            if(player.hasMetadata(metaData.replace("button-", "button-action-")))
             {
-                lore.add("§aButton Action: §f" + player.getMetadata("first-button-action").getFirst().asString());
-
-            }
-        } else if (metaData.equals("button-two"))
-        {
-            if(player.hasMetadata("second-button-name"))
-            {
-                lore.add("§aButton Name: §f" + player.getMetadata("second-button-name").getFirst().asString());
-            }
-            if(player.hasMetadata("second-button-action"))
-            {
-                lore.add("§aButton Action: §f" + player.getMetadata("second-button-action").getFirst().asString());
-
+                lore.add("§aButton Action: §f" + player.getMetadata(metaData.replace("button-", "button-action-")).getFirst().asString());
             }
         }
         itemMeta.setLore(lore);

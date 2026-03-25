@@ -12,7 +12,7 @@ import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@SuppressWarnings("deprecation")
 public class ChestInteract implements Listener {
     @EventHandler
     public void onClick (InventoryClickEvent event)
@@ -34,29 +34,43 @@ public class ChestInteract implements Listener {
                 case 2:
                     setupMenu("menu-text", player);
                     break;
-                case 5:
+                case 7:
                     confirm(player);
                     break;
-                case 6:
+                case 8:
                     reset(player);
                     player.closeInventory();
                     player.sendMessage("§cReset your progress!");
                     break;
             }
-            if(type.isRightClick() && event.getSlot() == 3)
-            {
-                setupMenu("first-button-action", player);
-                player.sendMessage("§aStart a message with §f!§a if it's a command!");
-            } else if (event.getSlot()==3) {
-                setupMenu("first-button-name", player);
-            }
-            if(type.isRightClick() && event.getSlot() == 4)
-            {
-                setupMenu("second-button-action", player);
-                player.sendMessage("§aStart a message with §f!§a if it's a command!");
-            } else if (event.getSlot() == 4) {
-                setupMenu("second-button-name", player);
-            }
+                int button = event.getSlot();
+                if(button > 2 && button < 7)
+                {
+                    player.closeInventory();
+                    button = button - 2;
+                    if(player.hasMetadata("buttons") && player.getMetadata("buttons").getFirst().asInt() < button)
+                    {
+                        player.setMetadata("buttons", new FixedMetadataValue(BetterBedrockMenus.getInstance(), button));
+
+                    }else if (!player.hasMetadata("buttons")){
+                        player.setMetadata("buttons", new FixedMetadataValue(BetterBedrockMenus.getInstance(), button));
+                    }
+                    player.setMetadata("setting-button", new FixedMetadataValue(BetterBedrockMenus.getInstance(), button));
+                    player.setMetadata("setting-value", new FixedMetadataValue(BetterBedrockMenus.getInstance(), "button "+ button));
+
+                    if(type.isRightClick())
+                    {
+                        player.setMetadata("setting-type", new FixedMetadataValue(BetterBedrockMenus.getInstance(), "button-action"));
+                        player.sendMessage("§aPlease set a value for §fbutton " + button + " action§a!" );
+                        player.sendMessage("§aStart a message with §f!§a if it's a command!");
+                    }
+                    else{
+                        player.setMetadata("setting-type", new FixedMetadataValue(BetterBedrockMenus.getInstance(), "button-type"));
+                        player.sendMessage("§aPlease set a value for §fbutton " + button + " name§a!" );
+
+
+                    }
+                }
         }
     }
     @EventHandler
@@ -87,10 +101,10 @@ public class ChestInteract implements Listener {
             failure(player, "Missing a required field (file name, menu name, and/or menu text)");
             return;
         }
-        if((player.hasMetadata("first-button-name")) && !(player.hasMetadata("first-button-action")) || ((player.hasMetadata("second-button-name")) && !(player.hasMetadata("second-button-action"))))
+        int buttons = 0;
+        if(player.hasMetadata("buttons"))
         {
-            failure(player, "Missing an action for one or more button(s)");
-            return;
+           buttons  = player.getMetadata("buttons").getFirst().asInt();
         }
 
         List<String> listOfMenus = new Menus().getListOfMenus();
@@ -106,32 +120,23 @@ public class ChestInteract implements Listener {
         }
         String menuName = player.getMetadata("menu-name").getFirst().asString();
         String menuText = player.getMetadata("menu-text").getFirst().asString();
-        String buttonName;
-        String buttonAction;
-        String buttonSecondName;
-        String buttonSecondAction;
-        try {
-            if (player.hasMetadata("second-button-name")) {
-                buttonName = player.getMetadata("first-button-name").getFirst().asString();
-                buttonAction = player.getMetadata("first-button-action").getFirst().asString();
-                buttonSecondName = player.getMetadata("second-button-name").getFirst().asString();
-                buttonSecondAction = player.getMetadata("second-button-action").getFirst().asString();
-                buttonSecondAction = formatCommand(buttonSecondAction);
-                buttonAction = formatCommand(buttonAction);
-                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText + " ^" + buttonName + " ^" + buttonAction + " ^" + buttonSecondName + " ^" + buttonSecondAction);
-            } else if (player.hasMetadata("first-button-name")) {
-                buttonName = player.getMetadata("first-button-name").getFirst().asString();
-                buttonAction = player.getMetadata("first-button-action").getFirst().asString();
-                buttonAction = formatCommand(buttonAction);
-                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText + " ^" + buttonName + " ^" + buttonAction);
-            } else {
-                player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText);
+        StringBuilder command = new StringBuilder("create-menu "+ fileName + " " + menuName + " ^" + menuText);
+
+        for (int i = 1; i <= buttons; i++) {
+            try
+            {
+                command.append(" ^").append(player.getMetadata("button-"+i).getFirst().asString()).append(" ^").append(formatCommand(player.getMetadata("button-action-"+i).getFirst().asString()));
+                player.removeMetadata("button-"+i, BetterBedrockMenus.getInstance());
+                player.removeMetadata("button-action-"+i, BetterBedrockMenus.getInstance());
+            }catch (NoSuchElementException e)
+            {
+                failure(player, "§cOne or more required values for a button is missing!\n§cPlease verify all set buttons have an §faction");
+                return;
             }
-        }catch(NoSuchElementException e)
-        {
-            player.performCommand("create-menu " + fileName + " " + menuName + " ^" + menuText);
+
         }
 
+        player.performCommand(command.toString());
         player.closeInventory();
         reset(player);
     }
@@ -140,10 +145,10 @@ public class ChestInteract implements Listener {
         player.removeMetadata("file-name", BetterBedrockMenus.getInstance());
         player.removeMetadata("menu-name", BetterBedrockMenus.getInstance());
         player.removeMetadata("menu-text", BetterBedrockMenus.getInstance());
-        player.removeMetadata("first-button-name", BetterBedrockMenus.getInstance());
-        player.removeMetadata("first-button-action", BetterBedrockMenus.getInstance());
-        player.removeMetadata("second-button-name", BetterBedrockMenus.getInstance());
-        player.removeMetadata("second-button-action", BetterBedrockMenus.getInstance());
+        for (int i = 1; i < 5; i++) {
+            player.removeMetadata("button-"+i, BetterBedrockMenus.getInstance());
+            player.removeMetadata("button-action-"+i, BetterBedrockMenus.getInstance());
+        }
         player.removeMetadata("opened-menu", BetterBedrockMenus.getInstance());
     }
 
