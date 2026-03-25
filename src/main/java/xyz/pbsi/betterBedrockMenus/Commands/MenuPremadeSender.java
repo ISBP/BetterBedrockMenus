@@ -89,7 +89,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 int buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
                 SimpleForm.Builder modalForm = formBuilder(title,body);
                 for (int i = 1; i <= buttons; i++) {
-                    modalForm = modalForm.button(hashMap.get("button-"+ i));
+                    modalForm = modalForm.button(new TextFormatter().formatColorCodes(hashMap.get("button-"+ i)));
                 }
                 modalForm.validResultHandler(result -> {
                     try {

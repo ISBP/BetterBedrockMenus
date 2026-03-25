@@ -51,6 +51,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
     {
         FileConfiguration config = this.getConfig();
         File menuDirectory = (new File(getDataFolder()+ "/menus") );
+        File configFile = new File(this.getDataFolder(), "config.yml");
         if(!getDataFolder().exists())
         {
             if(!getDataFolder().mkdir())
@@ -58,20 +59,21 @@ public final class BetterBedrockMenus extends JavaPlugin {
                 this.getLogger().warning("Failed to create config folder.");
             }
 
-            File configFile = new File(this.getDataFolder(), "config.yml");
+            }
             if(!configFile.exists())
             {
                 this.saveDefaultConfig();
-                config.addDefault("Welcome Menu Enabled", true);
-                config.addDefault("Welcome Menu Title", "Welcome to example server!");
-                config.addDefault("Welcome Menu Message", "Welcome to the server! For more info type /help!");
-                config.addDefault("Version", 1);
+                config.addDefault("Welcome Menu Enabled", false);
+                config.addDefault("Welcome Menu File", "Welcome");
+                config.addDefault("Version", 2);
                 config.options().copyDefaults(true);
                 saveConfig();
 
             }
-
-        }
+            if(config.getInt("Version") != 2)
+            {
+                getLogger().warning("Your configuration is out of date! Please delete it and restart the server.");
+            }
         if(!menuDirectory.exists())
         {
             if(!menuDirectory.mkdir())
