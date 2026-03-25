@@ -15,13 +15,13 @@ public final class BetterBedrockMenus extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        INSTANCE = this;
         long time = System.currentTimeMillis();
         int pluginId = 29704;
         new Metrics(this, pluginId);
         createConfig();
         registerCommands();
         registerEvents();
-        INSTANCE = this;
         new UpdateChecker().checkForUpdates();
         this.getLogger().info("Successfully enabled the plugin in " + (System.currentTimeMillis() - time) + "ms!");
     }
