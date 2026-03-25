@@ -1,5 +1,5 @@
 name: BetterBedrockMenus
-version: '0.4.1'
+version: '0.5.0'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BetterBedrockMenus
