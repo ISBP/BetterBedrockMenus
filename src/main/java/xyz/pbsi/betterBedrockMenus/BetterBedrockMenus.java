@@ -7,6 +7,7 @@ import xyz.pbsi.betterBedrockMenus.Listeners.ChatListener;
 import xyz.pbsi.betterBedrockMenus.Listeners.ChestInteract;
 import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
 import xyz.pbsi.betterBedrockMenus.Utils.Metrics;
+import xyz.pbsi.betterBedrockMenus.Utils.UpdateChecker;
 
 import java.io.File;
 public final class BetterBedrockMenus extends JavaPlugin {
@@ -21,6 +22,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         registerCommands();
         registerEvents();
         INSTANCE = this;
+        new UpdateChecker().checkForUpdates();
         this.getLogger().info("Successfully enabled the plugin in " + (System.currentTimeMillis() - time) + "ms!");
     }
 
