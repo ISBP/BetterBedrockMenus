@@ -1,6 +1,5 @@
 package xyz.pbsi.betterBedrockMenus.Commands;
 
-import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,8 +18,8 @@ import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,38 +70,21 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
                 String body = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
                 if(hashMap.containsKey("First Button Action") && !(hashMap.containsKey("button-1")))
                 {
-
-                    JsonObject object = new JsonObject();
-                    object.addProperty("Menu Name", hashMap.get("Menu Name"));
-                    object.addProperty("Menu Body", hashMap.get("Menu Body"));
-                    object.addProperty("button-1", hashMap.get("First Button Name"));
-                    object.addProperty("button-action-1", hashMap.get("First Button Action"));
+                    HashMap<String,String> reformattedHashMap = new HashMap<>();
+                    reformattedHashMap.put("Menu Name", hashMap.get("Menu Name"));
+                    reformattedHashMap.put("Menu Body", hashMap.get("Menu Body"));
+                    reformattedHashMap.put("button-1", hashMap.get("First Button Name"));
+                    reformattedHashMap.put("button-action-1", hashMap.get("First Button Action"));
                     if(hashMap.containsKey("Second Button Action"))
                     {
-                        object.addProperty("button-2", hashMap.get("Second Button Name"));
-                        object.addProperty("button-action-2", hashMap.get("Second Button Action"));
-                        object.addProperty("Buttons Amount", "2");
+                        reformattedHashMap.put("button-2", hashMap.get("Second Button Name"));
+                        reformattedHashMap.put("button-action-2", hashMap.get("Second Button Action"));
+                        reformattedHashMap.put("Buttons Amount", "2");
                     }else {
-                        object.addProperty("Buttons Amount", "1");
+                        reformattedHashMap.put("Buttons Amount", "1");
                     }
-
-                    if(hashMap.containsKey("Second Button Action"))
-                    {
-                        object.addProperty("button-2", hashMap.get("Second Button Name"));
-                        object.addProperty("button-action-2", hashMap.get("Second Button Action"));
-                    }
-                if(file.delete())
-                {
-                    try {
-
-                        FileWriter fileWriter = new FileWriter(folder + "/"+args[0]+".json");
-                        fileWriter.write(object.toString());
-                        fileWriter.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
+                    hashMap = reformattedHashMap;
+                sender.sendMessage("§aSending menu using §fold formatter§a!");
                 }
                 int buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
                 SimpleForm.Builder modalForm = formBuilder(title,body);
@@ -130,7 +112,21 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         Menus menus = new Menus();
         if(args.length == 1 || (args.length == 2 && args[0].equals("-c")))
         {
-            return menus.getListOfMenus();
+            int argument = args.length-1;
+            if(args[argument].isEmpty())
+            {
+                return menus.getListOfMenus();
+            }
+            ArrayList<String> arrayList = new ArrayList<>();
+            for (int i = 0; i < menus.getListOfMenus().size(); i++) {
+                if(menus.getListOfMenus().get(i).contains(args[argument]))
+                {
+                    arrayList.add(menus.getListOfMenus().get(i));
+                }
+
+            }
+            return arrayList;
+
         }
         return null;
     }
@@ -139,8 +135,17 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         Json json = new Json();
         button = button + 1;
         HashMap<String, String> menuReader =  json.jsonToHashMap(menu);
-        TextFormatter textFormatter = new TextFormatter();
         String action = menuReader.get("button-action-"+button);
+        if(menuReader.containsKey("First Button Action") && button == 1)
+        {
+            action = menuReader.get("First Button Action");
+
+        }
+        if(menuReader.containsKey("Second Button Action") && button == 2)
+        {
+            action = menuReader.get("Second Button Action");
+        }
+        TextFormatter textFormatter = new TextFormatter();
         if(action.charAt(0) == '/')
         {
             if(console)
