@@ -16,14 +16,14 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
+        Player javaPlayer = event.getPlayer();
         FileConfiguration config = BetterBedrockMenus.getInstance().getConfig();
         //Formats alternate color code
-        if(config.getBoolean("Welcome Menu Enabled"))
+        if(config.getBoolean("Welcome Menu Enabled") && FloodgateApi.getInstance().isFloodgatePlayer(javaPlayer.getUniqueId()))
         {
             String menu = config.getString("Welcome Menu File");
             if(new Menus().getListOfMenus().contains(menu))
             {
-                Player javaPlayer = event.getPlayer();
                 FloodgatePlayer player = FloodgateApi.getInstance().getPlayer(javaPlayer.getUniqueId());
                 if(player != null)
                 {   //The sending of the form is delayed to allow the client to initially load.
