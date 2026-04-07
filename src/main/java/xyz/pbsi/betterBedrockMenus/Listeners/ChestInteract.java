@@ -1,11 +1,16 @@
 package xyz.pbsi.betterBedrockMenus.Listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Menus;
@@ -18,6 +23,13 @@ public class ChestInteract implements Listener {
     public void onClick (InventoryClickEvent event)
     {
         Player player = (Player) event.getWhoClicked();
+        if(player.hasMetadata("menu-error"))
+        {
+            player.closeInventory();
+            player.removeMetadata("menu-error", BetterBedrockMenus.getInstance());
+            player.performCommand("menu-creator");
+            return;
+        }
 
         if(player.hasMetadata("opened-menu") && event.getView().getTitle().equals("§3§lMenu Creator"))
         {
@@ -90,9 +102,20 @@ public class ChestInteract implements Listener {
     }
     private void failure(Player player, String error)
     {
+
         player.sendMessage("§cThe menu was not completed! Reason:§f " + error + "§c!");
         player.closeInventory();
-        player.performCommand("menu-creator");
+        Inventory inventory = Bukkit.createInventory(player, 9, "§c§lError");
+        ItemStack errorBlock = new ItemStack(Material.REDSTONE_BLOCK);
+        ItemMeta errorMeta = errorBlock.getItemMeta();
+        errorMeta.setDisplayName("§4§lError");
+        errorMeta.setLore(List.of("§cThe menu was not completed!", "§cReason:§f "   + error + "§c!","§aClick to re-open the §fmenu creator§a!"));
+        errorBlock.setItemMeta(errorMeta);
+        player.setMetadata("menu-error", new FixedMetadataValue(BetterBedrockMenus.getInstance(), true));
+        for (int i = 0; i < 9; i++) {
+            inventory.setItem(i, errorBlock);
+        }
+        player.openInventory(inventory);
     }
     private void confirm(Player player)
     {
