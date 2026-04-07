@@ -1,5 +1,6 @@
 package xyz.pbsi.betterBedrockMenus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.pbsi.betterBedrockMenus.Commands.*;
@@ -15,15 +16,21 @@ public final class BetterBedrockMenus extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        //Initialize the instance
         INSTANCE = this;
+        //Saves the current time for setup duration calculation
         long time = System.currentTimeMillis();
+        //Enables BStats
         int pluginId = 29704;
+        //BStats is a separate project, and the project license does not apply to it.
         new Metrics(this, pluginId);
+        //Performs setup
         createConfig();
         registerCommands();
         registerEvents();
         new UpdateChecker().checkForUpdates();
-        this.getLogger().info("Successfully enabled the plugin in " + (System.currentTimeMillis() - time) + "ms!");
+        //Logs duration
+        this.getLogger().info("Successfully enabled Better Bedrock Menus " + (System.currentTimeMillis() - time) + "ms!");
     }
 
     @Override
@@ -52,16 +59,19 @@ public final class BetterBedrockMenus extends JavaPlugin {
         FileConfiguration config = this.getConfig();
         File menuDirectory = (new File(getDataFolder()+ "/menus") );
         File configFile = new File(this.getDataFolder(), "config.yml");
+        //Checks if the main folder exists
         if(!getDataFolder().exists())
         {
             if(!getDataFolder().mkdir())
             {
+                //If the function doesn't return true an error has occurred.
                 this.getLogger().warning("Failed to create config folder.");
             }
 
             }
             if(!configFile.exists())
             {
+                //Builds and creates the config file
                 this.saveDefaultConfig();
                 config.addDefault("Welcome Menu Enabled", false);
                 config.addDefault("Welcome Menu File", "Welcome");
@@ -72,6 +82,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
             }
             if(config.getInt("Version") != 2)
             {
+                //Config version checker
                 getLogger().warning("Your configuration is out of date! Please delete it and restart the server.");
             }
         if(!menuDirectory.exists())
