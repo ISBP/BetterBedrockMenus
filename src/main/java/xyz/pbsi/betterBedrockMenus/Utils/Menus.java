@@ -25,4 +25,19 @@ public class Menus {
         return arguments;
 
     }
+
+    public List<String> getListOfMenusContains(String string)
+    {
+        Menus menus = new Menus();
+            string = string.toLowerCase();
+            ArrayList<String> arrayList = new ArrayList<>();
+            for (int i = 0; i < menus.getListOfMenus().size(); i++) {
+                if (getListOfMenus().get(i).toLowerCase().contains(string)) {
+                    arrayList.add(menus.getListOfMenus().get(i));
+                }
+            }
+            return arrayList;
+
+
+    }
 }

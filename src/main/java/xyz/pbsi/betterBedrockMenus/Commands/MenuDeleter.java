@@ -46,7 +46,7 @@ public class MenuDeleter implements CommandExecutor, TabExecutor {
 
         if(args.length == 1)
         {
-            return menus.getListOfMenus();
+            return menus.getListOfMenusContains(args[0]);
         }
         return null;
     }

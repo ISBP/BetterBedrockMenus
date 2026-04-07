@@ -31,6 +31,10 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         {
             return false;
         }
+        if(args.length < 3 && args[0].contains("-c"))
+        {
+            return false;
+        }
         String fileName = args[0];
         Player preTargetPlayerJava = Bukkit.getPlayerExact(args[1]);
 
@@ -117,15 +121,7 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
             {
                 return menus.getListOfMenus();
             }
-            ArrayList<String> arrayList = new ArrayList<>();
-            for (int i = 0; i < menus.getListOfMenus().size(); i++) {
-                if(menus.getListOfMenus().get(i).contains(args[argument]))
-                {
-                    arrayList.add(menus.getListOfMenus().get(i));
-                }
-
-            }
-            return arrayList;
+            return menus.getListOfMenusContains(args[argument]);
 
         }
         return null;
@@ -150,9 +146,9 @@ public class MenuPremadeSender implements CommandExecutor, TabCompleter {
         {
             if(console)
             {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.formatPlaceholders(action, player).replace("/", ""));
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.fullTextFormat(action, player).replace("/", ""));
             }else {
-                player.performCommand(textFormatter.formatColorCodes(textFormatter.formatPlaceholders(action, player)).replace("/", ""));
+                player.performCommand(textFormatter.fullTextFormat(action, player).replace("/", ""));
             }
         }
         else {
