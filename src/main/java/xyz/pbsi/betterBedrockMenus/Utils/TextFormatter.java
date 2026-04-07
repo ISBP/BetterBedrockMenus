@@ -31,4 +31,9 @@ public class TextFormatter {
         }
         return text;
     }
+
+    public String fullTextFormat(String text, Player player)
+    {
+        return formatPlaceholders(formatColorCodes(text), player);
+    }
 }
