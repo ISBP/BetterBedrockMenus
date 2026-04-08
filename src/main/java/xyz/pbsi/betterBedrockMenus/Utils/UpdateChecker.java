@@ -32,7 +32,7 @@ public class UpdateChecker {
                     latestVersion = latestVersionObj.get("version_number").getAsString();
 
                     if (isNewerVersion(latestVersion, currentVersion)) {
-                        BetterBedrockMenus.getInstance().getLogger().warning("A new version of Better Bedrock Menus is available: " + latestVersion);
+                        BetterBedrockMenus.getInstance().getLogger().warning("A new version of Better Bedrock Menus is available: v" + latestVersion);
                         BetterBedrockMenus.getInstance().getLogger().info("Download it at: https://modrinth.com/project/better-bedrock-menus");
                     }
                 }

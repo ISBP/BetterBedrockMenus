@@ -25,6 +25,7 @@ public class ChestInteract implements Listener {
         Player player = (Player) event.getWhoClicked();
         if(player.hasMetadata("menu-error"))
         {
+            event.setCancelled(true);
             player.closeInventory();
             player.removeMetadata("menu-error", BetterBedrockMenus.getInstance());
             player.performCommand("menu-creator");

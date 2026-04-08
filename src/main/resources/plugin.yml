@@ -1,7 +1,7 @@
 name: BetterBedrockMenus
 website: https://pbsi.xyz
 description: This plugin allows server owners to create Bedrock native menus on java crossplay servers!
-version: '0.5.1'
+version: '0.5.2'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BBM
@@ -11,7 +11,7 @@ commands:
   BetterBedrockMenus:
     description: Provides basic info about the plugin.
   Send-Command-Menu:
-    description: Sends a menu to a specified player
+    description: Sends a menu to a specified player.
     usage: /Send-Menu <Player> <Title> <Content>
     permission: bbm.send
   Create-Menu:
@@ -19,14 +19,17 @@ commands:
     usage: /Create-Menu <Menu Name> <Menu Title> <Menu Description>
     permission: bbm.create
   Delete-Menu:
-    description: Deletes a menu
+    description: Deletes a menu.
     usage: /Delete-Menu <Menu Name>
     permission: bbm.delete
   Send-Menu:
     description: Sends a menu out of the list of pre-made ones.
-    usage: /send-menu <menu name> <player>
+    usage: /send-menu <Menu Name> <Player>
     permission: bbm.send
   Menu-Creator:
     permission: bbm.create
-    description: Chest UI menu for creating bedrock menus
+    description: GUI for creating bedrock menus.
     usage: /Menu-Creator
+  Open-Menu:
+    description: Opens a menu to the player that sent it, can be enabled and disabled in the config.
+    usage: /Open-Menu <Menu Name>

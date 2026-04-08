@@ -19,7 +19,7 @@ public class PlayerJoin implements Listener {
         Player javaPlayer = event.getPlayer();
         FileConfiguration config = BetterBedrockMenus.getInstance().getConfig();
         //Formats alternate color code
-        if(config.getBoolean("Welcome Menu Enabled") && FloodgateApi.getInstance().isFloodgatePlayer(javaPlayer.getUniqueId()))
+        if(!(config.getString("Welcome Menu File").equals("None")) && FloodgateApi.getInstance().isFloodgatePlayer(javaPlayer.getUniqueId()))
         {
             String menu = config.getString("Welcome Menu File");
             if(new Menus().getListOfMenus().contains(menu))
@@ -33,7 +33,15 @@ public class PlayerJoin implements Listener {
                         @Override
                         public void run()
                         {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "send-menu "+ menu + " " + javaPlayer.getName());
+                            if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Welcome Menu Console"))
+                            {
+                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "send-menu "+ menu + " " + javaPlayer.getName());
+
+                            }
+                            else {
+                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "send-menu -c "+ menu + " " + javaPlayer.getName());
+
+                            }
                         }
                     }.runTaskLater(BetterBedrockMenus.getInstance(), 60L);
                 }
