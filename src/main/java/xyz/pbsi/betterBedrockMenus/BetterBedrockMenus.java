@@ -88,7 +88,8 @@ public final class BetterBedrockMenus extends JavaPlugin {
             if(config.getInt("Version") < 3)
             {
                 //Config version checker
-                getLogger().warning("Your configuration is out of date! Please delete it and restart the server.");
+                getLogger().severe("Your configuration is out of date! Please delete it and restart the server.");
+                this.getServer().getPluginManager().disablePlugin(this);
             }
         if(!menuDirectory.exists())
         {

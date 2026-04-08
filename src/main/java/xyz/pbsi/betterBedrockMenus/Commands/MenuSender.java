@@ -89,8 +89,13 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                     hashMap = reformattedHashMap;
                 sender.sendMessage("§aSending menu using §fold formatter§a!");
                 }
-                int buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
-                SimpleForm.Builder modalForm = formBuilder(title,body);
+                int buttons = 0;
+                if(hashMap.containsKey("Buttons Amount"))
+                {
+                    buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
+                }
+
+                    SimpleForm.Builder modalForm = formBuilder(title,body);
                 for (int i = 1; i <= buttons; i++) {
                     modalForm = modalForm.button(new TextFormatter().formatColorCodes(hashMap.get("button-"+ i)));
                 }
@@ -105,6 +110,10 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                         throw new RuntimeException(e);
                     }
                 });
+                if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Log Sent Menus"))
+                {
+                    BetterBedrockMenus.getInstance().getLogger().info(sender.getName() + " sent menu "+ hashMap.get("Menu Name") + " to " + targetPlayerJava.getName()+".");
+                }
                 targetPlayer.sendForm(modalForm);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
@@ -144,18 +153,28 @@ public class MenuSender implements CommandExecutor, TabCompleter {
             action = menuReader.get("Second Button Action");
         }
         TextFormatter textFormatter = new TextFormatter();
-        if(action.charAt(0) == '/')
+        try
         {
-            if(console)
+            if(action.charAt(0) == '/')
             {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.fullTextFormat(action, player).replace("/", ""));
-            }else {
-                player.performCommand(textFormatter.fullTextFormat(action, player).replace("/", ""));
+                if(console)
+                {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), textFormatter.fullTextFormat(action, player).replace("/", ""));
+                }else {
+                    player.performCommand(textFormatter.fullTextFormat(action, player).replace("/", ""));
+                }
+            }
+            else {
+                player.sendMessage(textFormatter.formatPlaceholders(textFormatter.formatColorCodes(action),player));
+            }
+        }catch (NullPointerException e)
+        {
+            if(!BetterBedrockMenus.getInstance().getConfig().getBoolean("Close Button"))
+            {
+                BetterBedrockMenus.getInstance().getLogger().info(menu.getName() + " appears to lack an action for button" +button);
             }
         }
-        else {
-            player.sendMessage(textFormatter.formatPlaceholders(textFormatter.formatColorCodes(action),player));
-        }
+
     }
     private SimpleForm.Builder formBuilder(String title, String body)
     {
