@@ -24,14 +24,14 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
     Gson gson = new Gson();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if(args.length < 3)
+        {
+            return false;
+        }
         if(!menus.isMenu(args[0]))
         {
             sender.sendMessage("§cThat menu does not exist! (Case Sensitive)");
             return true;
-        }
-        if(args.length < 3)
-        {
-            return false;
         }
         String method = args[1];
         if(args[1].contains("Button-"))
