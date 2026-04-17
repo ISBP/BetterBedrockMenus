@@ -15,7 +15,6 @@ public class Menus {
         String[] folderList = folder.list();
         if(folderList != null)
         {
-
             for (int i = 0; i < folderList.length; i++) {
                 String formattedArg = folderList[i].replace(".json","");
                 arguments.add(formattedArg);
@@ -37,7 +36,10 @@ public class Menus {
                 }
             }
             return arrayList;
+    }
 
-
+    public boolean isMenu(String name)
+    {
+        return getListOfMenus().contains(name);
     }
 }
