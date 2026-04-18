@@ -39,7 +39,7 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
             method = method.toLowerCase();
         }
         try {
-            File menuFile = new File(BetterBedrockMenus.getInstance().getDataFolder() + "/menus/" + args[0] + ".json");
+            File menuFile = menus.getMenuAsFile(args[0]);
             HashMap<String, String> menuJSON = json.jsonToHashMap(menuFile);
             StringBuilder newValue = new StringBuilder();
             for (int i = 2; i < args.length; i++) {
@@ -59,7 +59,6 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
         }
         return true;
     }
-
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length == 1)
@@ -76,7 +75,7 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
             if(menus.isMenu(args[0]))
             {
                 try {
-                    HashMap<String, String> menuJSON =  json.jsonToHashMap(new File(BetterBedrockMenus.getInstance().getDataFolder() + "/menus/"+args[0]+".json"));
+                    HashMap<String, String> menuJSON =  json.jsonToHashMap(menus.getMenuAsFile(args[0]));
                     if(menuJSON.containsKey("Buttons Amount"))
                     {
                         buttons = Integer.parseInt(menuJSON.get("Buttons Amount"));
@@ -90,7 +89,6 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
                     BetterBedrockMenus.getInstance().getLogger().warning(e.getMessage());
                     return List.of("Error");
                 }
-
             }
             ArrayList<String> methods = new ArrayList<>();
             methods.add("Title");
