@@ -1,7 +1,7 @@
 name: BetterBedrockMenus
 website: https://pbsi.xyz
 description: This plugin allows server owners to create Bedrock native menus on java crossplay servers!
-version: '0.5.3-beta'
+version: '0.5.3'
 main: xyz.pbsi.betterBedrockMenus.BetterBedrockMenus
 api-version: '1.21'
 prefix: BBM
