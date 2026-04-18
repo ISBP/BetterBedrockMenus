@@ -19,6 +19,7 @@ import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,23 +72,19 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                 HashMap<String, String> hashMap = json.jsonToHashMap(file);
                 String title = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
                 String body = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
-                if(hashMap.containsKey("First Button Action") && !(hashMap.containsKey("button-1")))
+                if(!hashMap.containsKey("Buttons Amount"))
                 {
-                    HashMap<String,String> reformattedHashMap = new HashMap<>();
-                    reformattedHashMap.put("Menu Name", hashMap.get("Menu Name"));
-                    reformattedHashMap.put("Menu Body", hashMap.get("Menu Body"));
-                    reformattedHashMap.put("button-1", hashMap.get("First Button Name"));
-                    reformattedHashMap.put("button-action-1", hashMap.get("First Button Action"));
-                    if(hashMap.containsKey("Second Button Action"))
+                    sender.sendMessage("§aAttempting to update menu format....");
+                    try
                     {
-                        reformattedHashMap.put("button-2", hashMap.get("Second Button Name"));
-                        reformattedHashMap.put("button-action-2", hashMap.get("Second Button Action"));
-                        reformattedHashMap.put("Buttons Amount", "2");
-                    }else {
-                        reformattedHashMap.put("Buttons Amount", "1");
+                        Menus menus = new Menus();
+                        menus.updateMenu(file);
+                    } catch (IOException e) {
+                        sender.sendMessage("§cAn error occurred whilst trying to send this menu! Is it formatted correctly?");
+                        BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
+                        return true;
                     }
-                    hashMap = reformattedHashMap;
-                sender.sendMessage("§aSending menu using §fold formatter§a!");
+                    sender.sendMessage("§aUpdated menu format!");
                 }
                 int buttons = 0;
                 if(hashMap.containsKey("Buttons Amount"))

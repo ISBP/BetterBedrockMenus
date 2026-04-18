@@ -55,6 +55,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         this.getCommand("Send-Menu").setExecutor(new MenuSender());
         this.getCommand("Menu-Creator").setExecutor(new MenuUI());
         this.getCommand("Open-Menu").setExecutor(new OpenMenu());
+        this.getCommand("Edit-Menu").setExecutor(new MenuEditor());
     }
 
     public void createConfig()
