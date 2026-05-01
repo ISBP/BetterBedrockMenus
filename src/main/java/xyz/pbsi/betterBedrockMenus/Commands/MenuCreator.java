@@ -88,7 +88,22 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         object.addProperty("Title", textFormatter.formatColorCodes(titleBuilder.toString().replace("^", "")));
         object.addProperty("Body", textFormatter.formatColorCodes(bodyBuilder.toString().replace("^", "")));
         object.addProperty("Buttons Amount", String.valueOf(amountOfButtons));
-
+        for (int i = 1; i <= amountOfButtons; i++) {
+            StringBuilder buttonName = new StringBuilder(buttonBuilderHashMap.get("button-"+i));
+            StringBuilder buttonAction = new StringBuilder(buttonBuilderHashMap.get("button-action-"+i));
+            if(!(buttonName.isEmpty()) && !(buttonAction.isEmpty()))
+            {
+                buttonName.deleteCharAt(buttonName.length() - 1);
+                buttonAction.deleteCharAt(buttonAction.length() - 1);
+            }
+            else
+            {
+                sender.sendMessage("§cAn error occurred whilst attempting to format the strings.");
+                BetterBedrockMenus.getInstance().getLogger().severe("An error occurred while formating strings - please report this to the developer! " + "(MenuCreator.java)");
+            }
+            object.addProperty("button-" + i, buttonName.toString().replace("^", ""));
+            object.addProperty("button-action-" + i, buttonAction.toString().replace("^", ""));
+        }
         //Error catching
         if(building == 0)
         {
@@ -100,33 +115,13 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
             sender.sendMessage("§cNo action defined for new button!");
             return true;
         }
-
-        for (int i = 1; i <= amountOfButtons; i++) {
-            StringBuilder buttonName = new StringBuilder(buttonBuilderHashMap.get("button-"+i));
-            StringBuilder buttonAction = new StringBuilder(buttonBuilderHashMap.get("button-action-"+i));
-            if(!(buttonName.isEmpty()) && !(buttonAction.isEmpty()))
-            {
-                buttonName.deleteCharAt(buttonName.length() - 1);
-                buttonAction.deleteCharAt(buttonAction.length() - 1);
-            }
-            else
-            {
-                sender.sendMessage("ok so smth broke ngl");
-                return true;
-            }
-            object.addProperty("button-" + i, buttonName.toString().replace("^", ""));
-            object.addProperty("button-action-" + i, buttonAction.toString().replace("^", ""));
-
-        }
-
-        //Adds the JSON objects
-
+        //Writes the file
         try {
             FileWriter file = new FileWriter(folder + "/"+args[0]+".json");
             file.write(object.toString());
             file.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
         }
         sender.sendMessage("§aSuccessfully generated menu!");
 

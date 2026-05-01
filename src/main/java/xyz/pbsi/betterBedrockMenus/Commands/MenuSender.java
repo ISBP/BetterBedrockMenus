@@ -104,7 +104,7 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                     try {
                         resultHandler(result.clickedButtonId(), file, targetPlayerJava, consoleCommand);
                     } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
+                        BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
                     }
                 });
                 if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Log Sent Menus"))
@@ -113,7 +113,7 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                 }
                 targetPlayer.sendForm(modalForm);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
             }
 
         }
