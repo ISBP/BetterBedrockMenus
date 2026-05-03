@@ -11,7 +11,7 @@ Better Bedrock Menus intends to make the experience much easier for Bedrock play
 
 ## How do I install Better Bedrock Menus?
 You can download Better Bedrock Menus from the [releases](https://github.com/ISBP/BetterBedrockMenus/releases) tab!
-To use it, simply put the .jar file into the plugins folder of any Paper / Spigot server running Ver. 1.21 or later. Please note that you must have Geyser and Floodgate already installed for this plugin to work correctly. You can also install PlaceholderAPI for placeholder support!
+To use it, simply put the .jar file into the plugins folder of any Paper server running Ver. 1.21 or later. Please note that you must have Geyser and Floodgate already installed for this plugin to work correctly. You can also install PlaceholderAPI for placeholder support!
 ## How do I use Better Bedrock Menus?
 You can currently create a welcome menu via the config.yml generated within the plugin's data folder (located at /plugins/BetterBedrockMenus/Config.yml) in your server's directory.
 
@@ -30,7 +30,7 @@ To delete a saved menu use `/delete-menu <menu name.json>`. Please append the na
 The permission "bbm.create" is required to create any menus, so to use the command create-menu or menu-creator.
 To send a menu you must have the permission "bbm.send".
 
-### Explanation for non Minecraft players
+## Explanation for non Minecraft players
 Minecraft is a sandbox video game that's split into two versions. The original edition, java edition, has the most community servers and is the more well known version, however it only supports PC. Bedrock edition, the later edition, has less community ran servers but does support PC, phone, and *some* consoles. There was no built in crossplay between these versions so the community made a plugin to allow Bedrock players to join Java servers. A lot of Java servers add this plugin, however with Java being a PC only game and Bedrock supporting phones and such, the Java GUIs are really hard to navigate on phones, consoles, and such, so what my plugin does is use allow Java server owners to easily use create GUIs using the system built into bedrock edition.
 
 Example Java Chest GUI:
