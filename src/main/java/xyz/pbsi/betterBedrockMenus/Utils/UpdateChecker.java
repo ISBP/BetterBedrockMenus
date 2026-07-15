@@ -18,7 +18,7 @@ public class UpdateChecker {
     public void checkForUpdates() {
         try {
             String latestVersion;
-            String currentVersion = BetterBedrockMenus.getInstance().getPluginMeta().getVersion();
+            String currentVersion = BetterBedrockMenus.getInstance().getDescription().getVersion();
             URL url = new URL("https://api.modrinth.com/v2/project/better-bedrock-menus/version");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
