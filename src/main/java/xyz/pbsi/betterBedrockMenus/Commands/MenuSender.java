@@ -27,11 +27,7 @@ public class MenuSender implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if(args.length < 2)
-        {
-            return false;
-        }
-        if(args.length < 3 && args[0].contains("-c"))
+        if(args.length < 2 || (args.length < 3 && args[0].contains("-c")))
         {
             return false;
         }
@@ -56,7 +52,6 @@ public class MenuSender implements CommandExecutor, TabCompleter {
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
 
         File file = new File(folder + "/" + fileName + ".json");
-
 
         if(!file.exists())
         {
@@ -121,7 +116,6 @@ public class MenuSender implements CommandExecutor, TabCompleter {
     }
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        Menus menus = new Menus();
         if(args.length == 1 || (args.length == 2 && args[0].equals("-c")))
         {
             int argument = args.length-1;
