@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -25,8 +24,8 @@ public class Menus {
         String[] folderList = folder.list();
         if(folderList != null)
         {
-            for (int i = 0; i < folderList.length; i++) {
-                String formattedArg = folderList[i].replace(".json","");
+            for (String s : folderList) {
+                String formattedArg = s.replace(".json", "");
                 arguments.add(formattedArg);
             }
 
@@ -42,12 +41,11 @@ public class Menus {
      */
     public static List<String> getListOfMenusContains(String string)
     {
-        Menus menus = new Menus();
             string = string.toLowerCase();
             ArrayList<String> arrayList = new ArrayList<>();
-            for (int i = 0; i < menus.getListOfMenus().size(); i++) {
+            for (int i = 0; i < Menus.getListOfMenus().size(); i++) {
                 if (getListOfMenus().get(i).toLowerCase().contains(string)) {
-                    arrayList.add(menus.getListOfMenus().get(i));
+                    arrayList.add(Menus.getListOfMenus().get(i));
                 }
             }
             return arrayList;
