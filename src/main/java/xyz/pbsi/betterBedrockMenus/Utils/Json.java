@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 
 public class Json {
-    Gson gson = new Gson();
+    static Gson gson = new Gson();
 
     /**
      *
@@ -17,7 +17,7 @@ public class Json {
      * @return The JSON file as a HashMap
      * @throws FileNotFoundException Occurs when the file provided cannot be found
      */
-    public HashMap<String, String> jsonToHashMap(File file) throws FileNotFoundException
+    public static HashMap<String, String> jsonToHashMap(File file) throws FileNotFoundException
     {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         HashMap<String, String> json = gson.fromJson(bufferedReader, HashMap.class);
