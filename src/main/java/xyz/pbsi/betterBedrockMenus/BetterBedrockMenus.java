@@ -1,11 +1,15 @@
 package xyz.pbsi.betterBedrockMenus;
 
+import ch.njol.skript.Skript;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.skriptlang.skript.addon.SkriptAddon;
 import xyz.pbsi.betterBedrockMenus.Commands.*;
 import xyz.pbsi.betterBedrockMenus.Listeners.ChatListener;
 import xyz.pbsi.betterBedrockMenus.Listeners.ChestInteract;
 import xyz.pbsi.betterBedrockMenus.Listeners.PlayerJoin;
+import xyz.pbsi.betterBedrockMenus.Skript.Module;
 import xyz.pbsi.betterBedrockMenus.Utils.Metrics;
 import xyz.pbsi.betterBedrockMenus.Utils.UpdateChecker;
 
@@ -33,6 +37,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         createConfig();
         registerCommands();
         registerEvents();
+        setupSkript();
         //Logs duration
         this.getLogger().info("Successfully enabled Better Bedrock Menus " + (System.currentTimeMillis() - time) + "ms!");
     }
@@ -60,7 +65,13 @@ public final class BetterBedrockMenus extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("Edit-Menu")).setExecutor(new MenuEditor());
         Objects.requireNonNull(this.getCommand("List-Menus")).setExecutor(new ListMenus());
     }
+    public void setupSkript()
+    {
+        if(!(Bukkit.getPluginManager().isPluginEnabled("Skript"))) return;
+        SkriptAddon addon = Skript.instance().registerAddon(BetterBedrockMenus.class, "BetterBedrockMenus");
+        addon.loadModules(new Module());
 
+    }
     public void createConfig()
     {
         FileConfiguration config = this.getConfig();

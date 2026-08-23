@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 public class CommandMenuSender implements CommandExecutor {
-    @Deprecated
+    @Deprecated(since = "0.5.5")//Deprecated in favor of creating menus, this feature is very limited and will likely not be updated.
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length < 3)
