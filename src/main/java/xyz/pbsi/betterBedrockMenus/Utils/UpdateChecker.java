@@ -9,6 +9,7 @@ import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class UpdateChecker {
@@ -19,7 +20,7 @@ public class UpdateChecker {
         try {
             String latestVersion;
             String currentVersion = BetterBedrockMenus.getInstance().getPluginMeta().getVersion();
-            URL url = new URL("https://api.modrinth.com/v2/project/better-bedrock-menus/version");
+            URL url = new URI("https://api.modrinth.com/v2/project/better-bedrock-menus/version").toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -27,7 +28,7 @@ public class UpdateChecker {
                 InputStreamReader reader = new InputStreamReader(connection.getInputStream());
                 JsonArray versions = JsonParser.parseReader(reader).getAsJsonArray();
 
-                if (versions.size() > 0) {
+                if (!versions.isEmpty()) {
                     JsonObject latestVersionObj = versions.get(0).getAsJsonObject();
                     latestVersion = latestVersionObj.get("version_number").getAsString();
 
