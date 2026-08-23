@@ -12,19 +12,19 @@ commands:
     description: Provides basic info about the plugin.
   Send-Command-Menu:
     description: Sends a menu to a specified player.
-    usage: /Send-Menu <Player> <Title> <Content>
+    usage: "§7/§fSend-Menu §7<§fPlayer§7> <§fTitle§7> §7<§fContent§7> §7| §8[§fSends a menu with the values defined within the command!§8]"
     permission: bbm.send
   Create-Menu:
     description: Creates a menu and stores it within a file.
-    usage: /Create-Menu <Menu Name> <Menu Title> <Menu Description>
+    usage: "§7/§fSend-Menu §7<§fFile Name§7> <§fTitle§7> §7<§fContent§7> §7| §8[§fCreates a menu with the values defined within the command!§8]"
     permission: bbm.create
   Delete-Menu:
     description: Deletes a menu.
-    usage: /Delete-Menu <Menu Name>
+    usage: "§7/§fDelete-Menu §7<§fFile Name§7> §7| §8[§fDeletes a menu.§8]"
     permission: bbm.delete
   Send-Menu:
     description: Sends a menu out of the list of pre-made ones.
-    usage: /send-menu <Menu Name> <Player>
+    usage: "§7/§fSend-Menu §7<§fFile Name§7> §7<§fUsername§7> §7| §8[§fSends a menu to a player.§8]"
     permission: bbm.send
   Menu-Creator:
     permission: bbm.create
@@ -36,7 +36,7 @@ commands:
   Edit-Menu:
     description: Edits a menu.
     permission: bbm.edit
-    usage: /Edit-Menu <Menu Name> <Field> <New Value>
+    usage: "§7/§fEdit-Menu §7<§fFile Name§7> §7<§fField§7> §7<f§New Value§7> §7| §8[§fEdits a field within a menu.§8]"
   List-Menus:
     description: Lists all the menus.
     permission: bbm.list
