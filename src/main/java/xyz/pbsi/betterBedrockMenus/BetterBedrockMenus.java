@@ -23,7 +23,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         long time = System.currentTimeMillis();
         //Enables BStats
         int pluginId = 29704;
-        //BStats is a separate project, and the project license does not apply to it.
+        //BStats is a separate project, and thus, the project license does not apply to it.
         if(!getPluginMeta().getVersion().contains("beta"))
         {
             new Metrics(this, pluginId);
@@ -58,6 +58,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("Menu-Creator")).setExecutor(new MenuUI());
         Objects.requireNonNull(this.getCommand("Open-Menu")).setExecutor(new OpenMenu());
         Objects.requireNonNull(this.getCommand("Edit-Menu")).setExecutor(new MenuEditor());
+        Objects.requireNonNull(this.getCommand("List-Menus")).setExecutor(new ListMenus());
     }
 
     public void createConfig()
