@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MenuEditor implements CommandExecutor, TabCompleter {
-    Menus menus = new Menus();
     Json json = new Json();
     Gson gson = new Gson();
     @Override
@@ -28,7 +27,7 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
         {
             return false;
         }
-        if(!menus.isMenu(args[0]))
+        if(!Menus.isMenu(args[0]))
         {
             sender.sendMessage("§cThat menu does not exist! (Case Sensitive)");
             return true;
@@ -39,7 +38,7 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
             method = method.toLowerCase();
         }
         try {
-            File menuFile = menus.getMenuAsFile(args[0]);
+            File menuFile = Menus.getMenuAsFile(args[0]);
             HashMap<String, String> menuJSON = json.jsonToHashMap(menuFile);
             StringBuilder newValue = new StringBuilder();
             for (int i = 2; i < args.length; i++) {
@@ -65,17 +64,17 @@ public class MenuEditor implements CommandExecutor, TabCompleter {
         {
             if(args[0].isEmpty())
             {
-                return menus.getListOfMenus();
+                return Menus.getListOfMenus();
             }
-            return menus.getListOfMenusContains(args[0]);
+            return Menus.getListOfMenusContains(args[0]);
         }
         if(args.length == 2)
         {
             int buttons = 0;
-            if(menus.isMenu(args[0]))
+            if(Menus.isMenu(args[0]))
             {
                 try {
-                    HashMap<String, String> menuJSON =  json.jsonToHashMap(menus.getMenuAsFile(args[0]));
+                    HashMap<String, String> menuJSON =  json.jsonToHashMap(Menus.getMenuAsFile(args[0]));
                     if(menuJSON.containsKey("Buttons Amount"))
                     {
                         buttons = Integer.parseInt(menuJSON.get("Buttons Amount"));

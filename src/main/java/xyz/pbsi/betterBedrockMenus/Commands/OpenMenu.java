@@ -15,9 +15,9 @@ import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 import java.util.List;
 
 public class OpenMenu implements CommandExecutor, TabCompleter {
-    Menus menus = new Menus();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        String permission = "bbm.selfopen."+ args[0];
         if (args.length != 1)
         {
             return false;
@@ -30,7 +30,12 @@ public class OpenMenu implements CommandExecutor, TabCompleter {
 
         if(sender instanceof Player player && FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId()))
         {
-            if(!menus.getListOfMenus().contains(args[0]))
+            if(!player.hasPermission(permission))
+            {
+                player.sendMessage("§cYou must have permission§4 " + permission + "§c!");
+                return true;
+            }
+            if(!Menus.getListOfMenus().contains(args[0]))
             {
                 sender.sendMessage("§cThat menu does not exist!");
                 return true;
@@ -47,8 +52,8 @@ public class OpenMenu implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args[0].isEmpty())
         {
-            return menus.getListOfMenus();
+            return Menus.getListOfMenus();
         }
-        return menus.getListOfMenusContains(args[0]);
+        return Menus.getListOfMenusContains(args[0]);
     }
 }

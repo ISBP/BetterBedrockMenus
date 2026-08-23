@@ -10,6 +10,8 @@ import xyz.pbsi.betterBedrockMenus.Utils.Metrics;
 import xyz.pbsi.betterBedrockMenus.Utils.UpdateChecker;
 
 import java.io.File;
+import java.util.Objects;
+
 public final class BetterBedrockMenus extends JavaPlugin {
     private static BetterBedrockMenus INSTANCE;
 
@@ -21,7 +23,7 @@ public final class BetterBedrockMenus extends JavaPlugin {
         long time = System.currentTimeMillis();
         //Enables BStats
         int pluginId = 29704;
-        //BStats is a separate project, and the project license does not apply to it.
+        //BStats is a separate project, and thus, the project license does not apply to it.
         if(!getPluginMeta().getVersion().contains("beta"))
         {
             new Metrics(this, pluginId);
@@ -48,14 +50,15 @@ public final class BetterBedrockMenus extends JavaPlugin {
     }
     public void registerCommands()
     {
-        this.getCommand("BetterBedrockMenus").setExecutor(new Info());
-        this.getCommand("Send-Command-Menu").setExecutor(new CommandMenuSender());
-        this.getCommand("Create-Menu").setExecutor(new MenuCreator());
-        this.getCommand("Delete-Menu").setExecutor(new MenuDeleter());
-        this.getCommand("Send-Menu").setExecutor(new MenuSender());
-        this.getCommand("Menu-Creator").setExecutor(new MenuUI());
-        this.getCommand("Open-Menu").setExecutor(new OpenMenu());
-        this.getCommand("Edit-Menu").setExecutor(new MenuEditor());
+        Objects.requireNonNull(this.getCommand("BetterBedrockMenus")).setExecutor(new Info());
+        Objects.requireNonNull(this.getCommand("Send-Command-Menu")).setExecutor(new CommandMenuSender());
+        Objects.requireNonNull(this.getCommand("Create-Menu")).setExecutor(new MenuCreator());
+        Objects.requireNonNull(this.getCommand("Delete-Menu")).setExecutor(new MenuDeleter());
+        Objects.requireNonNull(this.getCommand("Send-Menu")).setExecutor(new MenuSender());
+        Objects.requireNonNull(this.getCommand("Menu-Creator")).setExecutor(new MenuUI());
+        Objects.requireNonNull(this.getCommand("Open-Menu")).setExecutor(new OpenMenu());
+        Objects.requireNonNull(this.getCommand("Edit-Menu")).setExecutor(new MenuEditor());
+        Objects.requireNonNull(this.getCommand("List-Menus")).setExecutor(new ListMenus());
     }
 
     public void createConfig()
