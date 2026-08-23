@@ -18,7 +18,7 @@ public class Menus {
      * Returns a list of the menus by reading the menus directory and removes the .json in the file names.
      * @return A list of all menus
      */
-    public List<String> getListOfMenus()
+    public static List<String> getListOfMenus()
     {
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
         List<String> arguments = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Menus {
      * @param string The phrase to be found from the list of files
      * @return All files that contain the phrase provided, may be empty
      */
-    public List<String> getListOfMenusContains(String string)
+    public static List<String> getListOfMenusContains(String string)
     {
         Menus menus = new Menus();
             string = string.toLowerCase();
@@ -58,7 +58,7 @@ public class Menus {
      * @param name The name to search for
      * @return Whether the name matches a menu
      */
-    public boolean isMenu(String name)
+    public static boolean isMenu(String name)
     {
         return getListOfMenus().contains(name);
     }
@@ -68,10 +68,9 @@ public class Menus {
      * @param name The name of a menu
      * @return The file associated with the menu
      */
-    public File getMenuAsFile(String name)
+    public static File getMenuAsFile(String name)
     {
         return new File(BetterBedrockMenus.getInstance().getDataFolder() + "/menus/" + name + ".json");
-
     }
 
     /**
@@ -79,7 +78,7 @@ public class Menus {
      * @param menuFile The file of the menu that is to be updated
      * @throws IOException Occurs when the file cannot be found or modified
      */
-    public void updateMenu(File menuFile) throws IOException {
+    public static void updateMenu(File menuFile) throws IOException {
         Json json = new Json();
         Gson gson = new Gson();
         HashMap<String, String> menuJSON = json.jsonToHashMap(menuFile);

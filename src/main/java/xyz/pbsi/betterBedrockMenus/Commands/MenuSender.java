@@ -77,8 +77,7 @@ public class MenuSender implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§aAttempting to update menu format....");
                     try
                     {
-                        Menus menus = new Menus();
-                        menus.updateMenu(file);
+                        Menus.updateMenu(file);
                     } catch (IOException e) {
                         sender.sendMessage("§cAn error occurred whilst trying to send this menu! Is it formatted correctly?");
                         BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
@@ -128,9 +127,9 @@ public class MenuSender implements CommandExecutor, TabCompleter {
             int argument = args.length-1;
             if(args[argument].isEmpty())
             {
-                return menus.getListOfMenus();
+                return Menus.getListOfMenus();
             }
-            return menus.getListOfMenusContains(args[argument]);
+            return Menus.getListOfMenusContains(args[argument]);
 
         }
         return null;
