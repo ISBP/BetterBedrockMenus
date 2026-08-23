@@ -28,7 +28,10 @@ To delete a saved menu use `/delete-menu <menu name.json>`. Please append the na
 
 ## Permissions:
 The permission "bbm.create" is required to create any menus, so to use the command create-menu or menu-creator.
-To send a menu you must have the permission "bbm.send".
+To send a menu you must have the permission "bbm.send". If you have the self open feature enabled, the player needs to have the permission `bbm.selfopen.<Name of menu>`.
+
+## Skript:
+You can send menus in Skript using the effect `send menu <menu name> to <player>`
 
 ### Explanation for non Minecraft players
 Minecraft is a sandbox video game that's split into two versions. The original edition, java edition, has the most community servers and is the more well known version, however it only supports PC. Bedrock edition, the later edition, has less community ran servers but does support PC, phone, and *some* consoles. There was no built in crossplay between these versions so the community made a plugin to allow Bedrock players to join Java servers. A lot of Java servers add this plugin, however with Java being a PC only game and Bedrock supporting phones and such, the Java GUIs are really hard to navigate on phones, consoles, and such, so what my plugin does is use allow Java server owners to easily use create GUIs using the system built into bedrock edition.
