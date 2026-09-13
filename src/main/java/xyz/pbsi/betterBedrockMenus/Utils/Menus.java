@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 import java.io.File;
@@ -119,23 +120,26 @@ public class Menus {
     /**
      *
      * @param sender The command sender.
-     * @param preTargetPlayerJava The Java Player to send the command to.
+     * @param targetPlayerJava The Java Player to send the command to.
      * @param fileName The name of the file of the menu being sent.
      * @param consoleCommand Whether to execute commands inside the menu as console.
      */
-    public static void sendMenu(CommandSender sender, Player preTargetPlayerJava, String fileName, boolean consoleCommand)
+    public static void sendMenu(@Nullable CommandSender sender, Player targetPlayerJava, String fileName, boolean consoleCommand)
     {
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
 
         File file = new File(folder + "/" + fileName + ".json");
-
+        if(sender == null)
+        {
+            //Logs all messages to console if the sender is null
+            sender = Bukkit.getConsoleSender();
+        }
         if(!file.exists())
         {
             sender.sendMessage("§cThat menu does not exist!");
             return;
         }
 
-        Player targetPlayerJava = preTargetPlayerJava;
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
             TextFormatter textFormatter = new TextFormatter();
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
@@ -190,9 +194,8 @@ public class Menus {
     }
     private static void resultHandler(int button, File menu, Player player, boolean console) throws FileNotFoundException
     {
-        Json json = new Json();
         button = button + 1;
-        HashMap<String, String> menuReader =  json.jsonToHashMap(menu);
+        HashMap<String, String> menuReader =  Json.jsonToHashMap(menu);
         String action = menuReader.get("button-action-"+button);
         if(menuReader.containsKey("First Button Action") && button == 1)
         {

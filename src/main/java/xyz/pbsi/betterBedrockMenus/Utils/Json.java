@@ -20,7 +20,6 @@ public class Json {
     public static HashMap<String, String> jsonToHashMap(File file) throws FileNotFoundException
     {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        HashMap<String, String> json = gson.fromJson(bufferedReader, HashMap.class);
-        return json;
+        return gson.fromJson(bufferedReader, HashMap.class);
     }
 }

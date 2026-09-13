@@ -2,7 +2,10 @@ package xyz.pbsi.betterBedrockMenus.Utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 public class TextFormatter {
     //This function replaces the & in messages with §, as you can't type a section symbol within Minecraft java
@@ -53,5 +56,16 @@ public class TextFormatter {
     public String fullTextFormat(String text, Player player)
     {
         return formatPlaceholders(formatColorCodes(text), player);
+    }
+
+    public static void sendMessage(@Nullable CommandSender sender, String message)
+    {
+        if(sender == null)
+        {
+            BetterBedrockMenus.getInstance().getLogger().info(message);
+        }
+        else {
+            sender.sendMessage(message);
+        }
     }
 }
