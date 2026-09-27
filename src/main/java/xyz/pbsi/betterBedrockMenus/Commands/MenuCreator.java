@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Utils.FileIO;
 import xyz.pbsi.betterBedrockMenus.Utils.TextFormatter;
 
 
@@ -117,14 +118,11 @@ public class MenuCreator implements CommandExecutor, TabCompleter {
         }
         //Writes the file
         try {
-            FileWriter file = new FileWriter(folder + "/"+args[0]+".json");
-            file.write(object.toString());
-            file.close();
+            FileWriter fileWriter = new FileWriter(folder + "/"+args[0]+".json");
+            FileIO.writeFileAsync(fileWriter, object, sender);
         } catch (IOException e) {
             BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
         }
-        sender.sendMessage("§aSuccessfully generated menu!");
-
         return true;
     }
     //Tab completion, set's the first position to FileName then provides a brief template for the other positions.
