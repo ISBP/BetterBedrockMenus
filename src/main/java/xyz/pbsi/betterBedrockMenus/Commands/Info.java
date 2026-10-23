@@ -10,6 +10,8 @@ import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 
 import java.util.List;
 
+import static xyz.pbsi.betterBedrockMenus.Utils.UpdateChecker.latestPluginVersion;
+
 public class Info implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
@@ -31,7 +33,7 @@ public class Info implements CommandExecutor, TabCompleter {
 
             }
             else {
-                sender.sendMessage("§fBetter §aBedrock §fMenus §8(§7Prod§8)\n§8 | §fDeveloper: §apbsi\n§8 | §fVersion: §a"+version+"\n§8 | §fAPI Ver: §a"+BetterBedrockMenus.getInstance().getPluginMeta().getAPIVersion());
+                sender.sendMessage("§fBetter §aBedrock §fMenus §8(§7Prod§8)\n§8 | §fDeveloper: §apbsi\n§8 | §fVersion: §a"+ version + " §8(§fLatest: §a" + latestPluginVersion + "§8)" + "\n§8 | §fAPI Ver: §a"+BetterBedrockMenus.getInstance().getPluginMeta().getAPIVersion());
             }
         }
         return true;

@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.skriptlang.skript.addon.SkriptAddon;
 import xyz.pbsi.betterBedrockMenus.Commands.*;
 import xyz.pbsi.betterBedrockMenus.Listeners.ChatListener;
@@ -31,7 +32,13 @@ public final class BetterBedrockMenus extends JavaPlugin {
         if(!getPluginMeta().getVersion().contains("beta"))
         {
             new Metrics(this, pluginId);
-            new UpdateChecker().checkForUpdates();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    new UpdateChecker().checkForUpdates();
+
+                }
+            }.runTaskAsynchronously(BetterBedrockMenus.getInstance());
         }
         //Performs setup
         createConfig();
@@ -86,26 +93,26 @@ public final class BetterBedrockMenus extends JavaPlugin {
                 this.getLogger().warning("Failed to create config folder.");
             }
 
-            }
-            if(!configFile.exists())
-            {
-                //Builds and creates the config file
-                this.saveDefaultConfig();
-                config.addDefault("Welcome Menu File", "None");
-                config.addDefault("Self Menu Open", false);
-                config.addDefault("Welcome Menu Console", false);
-                config.addDefault("Log Sent Menus", false);
-                config.addDefault("Close Button", true);
-                config.addDefault("Version", 3);
-                config.options().copyDefaults(true);
-                saveConfig();
-            }
-            if(config.getInt("Version") < 3)
-            {
-                //Config version checker
-                getLogger().severe("Your configuration is out of date! Please delete it and restart the server.");
-                this.getServer().getPluginManager().disablePlugin(this);
-            }
+        }
+        if(!configFile.exists())
+        {
+            //Builds and creates the config file
+            this.saveDefaultConfig();
+            config.addDefault("Welcome Menu File", "None");
+            config.addDefault("Self Menu Open", false);
+            config.addDefault("Welcome Menu Console", false);
+            config.addDefault("Log Sent Menus", false);
+            config.addDefault("Close Button", true);
+            config.addDefault("Version", 3);
+            config.options().copyDefaults(true);
+            saveConfig();
+        }
+        if(config.getInt("Version") < 3)
+        {
+            //Config version checker
+            getLogger().severe("Your configuration is out of date! Please delete it and restart the server.");
+            this.getServer().getPluginManager().disablePlugin(this);
+        }
         if(!menuDirectory.exists())
         {
             if(!menuDirectory.mkdir())
