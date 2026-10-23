@@ -13,7 +13,7 @@ import java.net.URI;
 import java.net.URL;
 
 public class UpdateChecker {
-
+    public static String latestPluginVersion = BetterBedrockMenus.getInstance().getPluginMeta().getVersion();
 
 
     public void checkForUpdates() {
@@ -31,8 +31,8 @@ public class UpdateChecker {
                 if (!versions.isEmpty()) {
                     JsonObject latestVersionObj = versions.get(0).getAsJsonObject();
                     latestVersion = latestVersionObj.get("version_number").getAsString();
-
                     if (isNewerVersion(latestVersion, currentVersion)) {
+                        latestPluginVersion = latestVersion;
                         BetterBedrockMenus.getInstance().getLogger().warning("A new version of Better Bedrock Menus is available: v" + latestVersion);
                         BetterBedrockMenus.getInstance().getLogger().info("Download it at: https://modrinth.com/project/better-bedrock-menus");
                     }

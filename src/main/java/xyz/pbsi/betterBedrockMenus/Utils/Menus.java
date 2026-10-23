@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
+import xyz.pbsi.betterBedrockMenus.Callbacks.FileReadCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -119,70 +121,79 @@ public class Menus {
     /**
      *
      * @param sender The command sender.
-     * @param preTargetPlayerJava The Java Player to send the command to.
+     * @param targetPlayerJava The Java Player to send the command to.
      * @param fileName The name of the file of the menu being sent.
      * @param consoleCommand Whether to execute commands inside the menu as console.
      */
-    public static void sendMenu(CommandSender sender, Player preTargetPlayerJava, String fileName, boolean consoleCommand)
+    public static void sendMenu(@Nullable CommandSender sender, Player targetPlayerJava, String fileName, boolean consoleCommand)
     {
         File folder = new File(BetterBedrockMenus.getInstance().getDataFolder()+"/menus");
 
         File file = new File(folder + "/" + fileName + ".json");
-
+        if(sender == null)
+        {
+            //Logs all messages to console if the sender is null
+            sender = Bukkit.getConsoleSender();
+        }
         if(!file.exists())
         {
             sender.sendMessage("§cThat menu does not exist!");
             return;
         }
 
-        Player targetPlayerJava = preTargetPlayerJava;
         if(targetPlayerJava != null && FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId()) != null) {
             TextFormatter textFormatter = new TextFormatter();
             FloodgatePlayer targetPlayer = FloodgateApi.getInstance().getPlayer(targetPlayerJava.getUniqueId());
             try {
-                HashMap<String, String> hashMap = Json.jsonToHashMap(file);
-                String title = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
-                String body = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
-                if(!hashMap.containsKey("Buttons Amount"))
-                {
-                    sender.sendMessage("§aAttempting to update menu format....");
-                    try
-                    {
-                        Menus.updateMenu(file);
-                    } catch (IOException e) {
-                        sender.sendMessage("§cAn error occurred whilst trying to send this menu! Is it formatted correctly?");
-                        BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
-                        return;
-                    }
-                    sender.sendMessage("§aUpdated menu format!");
-                }
-                int buttons = 0;
-                if(hashMap.containsKey("Buttons Amount"))
-                {
-                    buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
-                }
+                @Nullable CommandSender finalSender = sender;
+                FileIO.readFileAsync(file, new FileReadCallback() {
+                    @Override
+                    public void onFileRead(HashMap<String, String> hashMap) {
+                        String title = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Title").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
+                        String body = textFormatter.formatColorCodes(textFormatter.formatPlaceholders(hashMap.get("Body").replace("{player}", targetPlayer.getCorrectUsername()), targetPlayerJava));
+                        if(!hashMap.containsKey("Buttons Amount"))
+                        {
+                            finalSender.sendMessage("§aAttempting to update menu format....");
+                            try
+                            {
+                                Menus.updateMenu(file);
+                            } catch (IOException e) {
+                                finalSender.sendMessage("§cAn error occurred whilst trying to send this menu! Is it formatted correctly?");
+                                BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
+                                return;
+                            }
+                            finalSender.sendMessage("§aUpdated menu format!");
+                        }
+                        int buttons = 0;
+                        if(hashMap.containsKey("Buttons Amount"))
+                        {
+                            buttons = Integer.parseInt(hashMap.get("Buttons Amount"));
+                        }
 
-                SimpleForm.Builder modalForm = formBuilder(title,body);
-                for (int i = 1; i <= buttons; i++) {
-                    modalForm = modalForm.button(new TextFormatter().formatColorCodes(hashMap.get("button-"+ i)));
-                }
-                if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Close Button"))
-                {
-                    modalForm = modalForm.button("Close");
-                }
-                modalForm.validResultHandler(result -> {
-                    try {
-                        resultHandler(result.clickedButtonId(), file, targetPlayerJava, consoleCommand);
-                    } catch (FileNotFoundException e) {
-                        BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
+                        SimpleForm.Builder modalForm = formBuilder(title,body);
+                        for (int i = 1; i <= buttons; i++) {
+                            modalForm = modalForm.button(new TextFormatter().formatColorCodes(hashMap.get("button-"+ i)));
+                        }
+                        if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Close Button"))
+                        {
+                            modalForm = modalForm.button("Close");
+                        }
+                        modalForm.validResultHandler(result -> {
+                            try {
+                                resultHandler(result.clickedButtonId(), file, targetPlayerJava, consoleCommand);
+                            } catch (FileNotFoundException e) {
+                                BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
+                            }
+                        });
+                        if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Log Sent Menus"))
+                        {
+                            BetterBedrockMenus.getInstance().getLogger().info(finalSender.getName() + " sent menu "+ hashMap.get("Menu Name") + " to " + targetPlayerJava.getName()+".");
+                        }
+                        targetPlayer.sendForm(modalForm);
                     }
                 });
-                if(BetterBedrockMenus.getInstance().getConfig().getBoolean("Log Sent Menus"))
-                {
-                    BetterBedrockMenus.getInstance().getLogger().info(sender.getName() + " sent menu "+ hashMap.get("Menu Name") + " to " + targetPlayerJava.getName()+".");
-                }
-                targetPlayer.sendForm(modalForm);
-            } catch (FileNotFoundException e) {
+
+            } catch (IOException e) {
                 BetterBedrockMenus.getInstance().getLogger().severe(e.getMessage());
             }
 
@@ -190,9 +201,8 @@ public class Menus {
     }
     private static void resultHandler(int button, File menu, Player player, boolean console) throws FileNotFoundException
     {
-        Json json = new Json();
         button = button + 1;
-        HashMap<String, String> menuReader =  json.jsonToHashMap(menu);
+        HashMap<String, String> menuReader =  Json.jsonToHashMap(menu);
         String action = menuReader.get("button-action-"+button);
         if(menuReader.containsKey("First Button Action") && button == 1)
         {
