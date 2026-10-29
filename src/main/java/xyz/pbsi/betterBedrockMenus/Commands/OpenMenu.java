@@ -12,21 +12,22 @@ import org.jetbrains.annotations.Nullable;
 import xyz.pbsi.betterBedrockMenus.BetterBedrockMenus;
 import xyz.pbsi.betterBedrockMenus.Utils.Menus;
 
+import java.awt.*;
 import java.util.List;
 
 public class OpenMenu implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        String permission = "bbm.selfopen."+ args[0];
-        if (args.length != 1)
-        {
-            return false;
-        }
         if(!BetterBedrockMenus.getInstance().getConfig().getBoolean("Self Menu Open"))
         {
             sender.sendMessage("§cThis feature is not enabled!");
             return true;
         }
+        if (args.length != 1)
+        {
+            return false;
+        }
+        String permission = "bbm.selfopen."+ args[0];
 
         if(sender instanceof Player player && FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId()))
         {
@@ -40,7 +41,7 @@ public class OpenMenu implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§cThat menu does not exist!");
                 return true;
             }
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "send-menu "+args[0]+" "+player.getName());
+            Menus.sendMenu(Bukkit.getConsoleSender(), player, args[0], false);
         }
         else {
             sender.sendMessage("§cMenus cannot be sent to you!");
